@@ -147,8 +147,8 @@ ajustado) fica para o plano da etapa 4, junto com o deploy na Oracle. A base é 
 
 - [x] 1. Criar o projeto Laravel 13 sem PHP no host — confirmada em 2026-11-02
 - [x] 2. Imagem e compose — confirmada em 2026-11-02
-- [ ] 3. `.env.example` e `justfile` — entregue, aguardando conferência
-- [ ] 4. Ambiente conferido
+- [x] 3. `.env.example` e `justfile` — confirmada em 2026-11-02
+- [ ] 4. Ambiente conferido — entregue, aguardando conferência
 - [ ] 5. Layout e página inicial
 - [ ] 6. Registro
 - [ ] 7. Login e logout
