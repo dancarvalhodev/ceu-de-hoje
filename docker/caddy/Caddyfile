@@ -1,0 +1,19 @@
+:80 {
+	root * /var/www/html/public
+
+	log
+
+	# /login/ -> /login, unless the path is a real file
+	@trailingSlash {
+		path_regexp withSlash ^/(.+)/$
+		not file
+	}
+	redir @trailingSlash /{re.withSlash.1} 301
+
+	@hidden path */.ht*
+	respond @hidden 403
+
+	php_fastcgi php:9000
+
+	file_server
+}

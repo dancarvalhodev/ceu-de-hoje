@@ -59,6 +59,8 @@ Prevalecem sobre o texto das etapas abaixo:
 - **Etapas 10 e 11:** incluir `destroy`; a Policy tem `update` e `delete`, sem `view`, já que não
   há `show`.
 - **`.idea/` não é versionado.**
+- **Etapa 2:** o Caddy monta só `./public` (como no Wecker), porque não há upload no escopo. Se
+  surgir, montar o projeto inteiro para o link `public/storage` funcionar.
 
 ## Etapas de implementação
 
@@ -143,8 +145,8 @@ ajustado) fica para o plano da etapa 4, junto com o deploy na Oracle. A base é 
 
 ## Progresso
 
-- [ ] 1. Criar o projeto Laravel 13 sem PHP no host — entregue, aguardando conferência
-- [ ] 2. Imagem e compose
+- [x] 1. Criar o projeto Laravel 13 sem PHP no host — confirmada em 2026-11-02
+- [ ] 2. Imagem e compose — entregue, aguardando conferência
 - [ ] 3. `.env.example` e `justfile`
 - [ ] 4. Ambiente conferido
 - [ ] 5. Layout e página inicial
