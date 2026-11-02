@@ -36,6 +36,8 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Clareza acima de esperteza** (`.claude/rules/code-style.md`): código para júnior e pleno, poucos
   comentários (só o porquê; regex sempre com um comentário breve).
 - **Explicações com analogias**, curtas. **Documentação e relatórios enxutos.**
+- **Resumo pós-execução direto e pequeno:** cabe numa tela, sem repetir o diff; detalhe só se ele
+  perguntar (formato na skill `modo-codando`, seção 5).
 - **Testes que provam o que importa** (o comportamento real), nada de teste que só confirma o óbvio.
 - **CodeGraph primeiro** para entender código, quando houver `.codegraph/`. **Editar com o Edit,
   não com `sed`.**

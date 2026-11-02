@@ -133,33 +133,27 @@ anteriores.
 
 ## 5. Entregar a etapa
 
-Ao terminar, encerre o turno com um relatório **curto** neste formato: poucas linhas por seção,
-só o que o dev precisa para conferir e decidir.
+Ao terminar, encerre o turno com um relatório **direto e pequeno**: cabe numa tela, um item por
+linha, sem repetir o que o diff já mostra. Omita qualquer seção vazia. O detalhe fica para quando
+o dev perguntar.
 
 ```
 **Etapa N de T — <título>: concluída**
 
-O que foi feito:
-- <arquivos criados ou alterados e o que cada um faz>
-- <comandos make:* usados>
+Feito:
+- <arquivo ou comando make:* — o que faz, em poucas palavras>
 
-Como funciona:
-<explicação curta das alterações, começando por uma analogia>
+Laravel:
+<1 a 3 frases: analogia + a mágica nova, com link da documentação>
 
-O que o Laravel fez sozinho:
-- <convenções e mágicas que entraram nesta etapa, com link da documentação; omita se não houve>
+Fora do plano:
+- <desvio e por quê>
 
-Documentação:
-- <documento de .claude/arch-explain/ criado ou atualizado; omita se a etapa não mexeu em nenhum assunto>
+Verificado:
+- <comando — resultado>; não verificado: <o quê e por quê>
 
-Diferenças em relação ao plano:
-- <desvios e por quê; omita a seção se não houve>
-
-O que verifiquei:
-- <comandos rodados e o resultado; o que NÃO pôde ser verificado e por quê>
-
-Para conferir:
-<comandos ou passos, com o resultado esperado>
+Conferir:
+<comando e resultado esperado>
 
 Está tudo correto? Posso seguir para a etapa N+1 — <título>?
 ```
