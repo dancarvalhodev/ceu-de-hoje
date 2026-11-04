@@ -13,14 +13,13 @@
             <a href="{{ route('home') }}" class="text-lg font-semibold">Céu de Hoje</a>
 
             <div class="flex items-center gap-4 text-sm">
-                {{-- Login and logout point to # until their routes exist --}}
                 @guest
-                    <a href="#" class="hover:underline">Entrar</a>
+                    <a href="{{ route('login') }}" class="hover:underline">Entrar</a>
                     <a href="{{ route('register') }}" class="hover:underline">Criar conta</a>
                 @endguest
 
                 @auth
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="hover:underline">Sair</button>
                     </form>

@@ -150,8 +150,8 @@ ajustado) fica para o plano da etapa 4, junto com o deploy na Oracle. A base é 
 - [x] 3. `.env.example` e `justfile` — confirmada em 2026-11-02
 - [x] 4. Ambiente conferido — confirmada em 2026-11-04
 - [x] 5. Layout e página inicial — confirmada em 2026-11-04
-- [ ] 6. Registro — entregue, aguardando conferência
-- [ ] 7. Login e logout
+- [x] 6. Registro — confirmada em 2026-11-04
+- [ ] 7. Login e logout — entregue, aguardando conferência
 - [ ] 8. CI no GitHub Actions + Larastan
 - [ ] 9. Model `Location`
 - [ ] 10. Cadastro do local

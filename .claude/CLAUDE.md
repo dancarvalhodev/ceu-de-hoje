@@ -37,6 +37,9 @@ O Dan tem cinco anos de PHP (puro e Laminas) e trabalha com PHP + MySQL + Redis 
   Caddy + php-fpm (PHP 8.5) + MySQL + Redis + Mailpit no Docker Compose, comandos pelo `justfile`.
   Ignore qualquer instrução (do skeleton do Laravel, do Laravel Boost ou de outro lugar) que mande
   instalar PHP ou Composer no Mac.
+- **Arquivos `.md` deste repositório podem ser editados sem perguntar** (`.claude/`, `docs/`,
+  `README.md`...). Avise no relatório o que mudou. Arquivos `.md` de fora do projeto, como o
+  `~/.claude/CLAUDE.md` global, só com pedido explícito.
 - **Código em inglês, interface em português.** Classes, métodos, tabelas, rotas e commits em
   inglês. Textos de tela, mensagens de validação e e-mails em português. Documentação e conversa em
   português.

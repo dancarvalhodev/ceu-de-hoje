@@ -18,6 +18,9 @@ de volta quem já entrou e tenta se cadastrar de novo.
 |---|---|---|---|
 | `GET /register` | `register` | `guest` | `Route::view` → `auth/register.blade.php` |
 | `POST /register` | `register.store` | `guest` | `Auth\RegisterController` (invocável) |
+| `GET /login` | `login` | `guest` | `Route::view` → `auth/login.blade.php` |
+| `POST /login` | `login.store` | `guest` | `Auth\LoginController` (invocável) |
+| `POST /logout` | `logout` | `auth` | `Auth\LogoutController` (invocável) |
 
 - **Validação no `RegisterRequest`** ([Form Request](https://laravel.com/docs/13.x/validation#form-request-validation)):
   o Laravel valida antes de chamar o controller. Se falhar, volta para o formulário com os erros
@@ -30,12 +33,22 @@ de volta quem já entrou e tenta se cadastrar de novo.
   `password_confirmation` não entra no `validated()`.
 - **`Auth::login($user)` + `session()->regenerate()`:** entra com o usuário novo e troca o id da
   sessão, contra fixação de sessão.
+- **Login com `Auth::attempt($credentials)`:** busca o usuário pelo e-mail e confere a senha
+  contra o hash. Falhou? Volta com a mesma mensagem para e-mail inexistente e senha errada, para
+  não revelar quem tem conta.
+- **`redirect()->intended(...)`:** quem foi barrado em `/locations` e mandado ao login volta para
+  `/locations`; quem abriu o login direto cai no destino padrão.
+- **Logout:** `Auth::logout()`, `session()->invalidate()` (apaga a sessão) e
+  `regenerateToken()` (novo token CSRF). É `POST` com `@csrf`, para que um link externo não
+  derrube a sessão de ninguém.
 - **`@guest` / `@auth`** no `<x-layout>` decidem o menu.
 
 ## Pegadinhas
 
-- **Visitante em rota `auth` é mandado para `route('login')`.** Enquanto a rota `login` não
-  existir (etapa 7), abrir `/locations` deslogado dá erro 500.
+- **Para onde os middlewares mandam:** o `auth` manda visitante para a rota de nome `login`, e o
+  `guest` manda quem está logado para a rota `home`. É por convenção de nome: renomear essas
+  rotas quebra os redirecionamentos (configuráveis em `bootstrap/app.php`, com
+  `redirectGuestsTo` e `redirectUsersTo`).
 - **`email` com `lowercase`:** a regra recusa maiúsculas em vez de convertê-las.
 
 ## Comandos úteis
