@@ -13,10 +13,10 @@
             <a href="{{ route('home') }}" class="text-lg font-semibold">Céu de Hoje</a>
 
             <div class="flex items-center gap-4 text-sm">
-                {{-- Links provisórios: as rotas de registro, login e logout chegam nas etapas 6 e 7 --}}
+                {{-- Login and logout point to # until their routes exist --}}
                 @guest
                     <a href="#" class="hover:underline">Entrar</a>
-                    <a href="#" class="hover:underline">Criar conta</a>
+                    <a href="{{ route('register') }}" class="hover:underline">Criar conta</a>
                 @endguest
 
                 @auth
