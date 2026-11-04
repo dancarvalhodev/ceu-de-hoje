@@ -39,6 +39,12 @@ Um **restaurante**. O Caddy é o **garçom**: entrega na hora o que já está pr
 
 ## Pegadinhas
 
+- **Dono dos arquivos (Linux).** O projeto é montado no container, então o uid de quem escreve
+  vale no host. O `www-data` da imagem `php` é criado com o seu uid/gid (`HOST_UID`/`HOST_GID`,
+  exportados pelo `justfile` a partir do `id -u`/`id -g`), e o `node` roda com o mesmo uid. Sem
+  isso, o php-fpm (uid 33) não grava em `storage/` (erro 500 com `tempnam()`) e o que o Artisan ou
+  o Composer geram fica com dono root. Por isso as receitas usam `docker compose exec -u www-data`.
+  Um `docker compose exec php ...` à mão entra como root: evite para comandos que criam arquivos.
 - **Sem `restart: always`:** depois de reiniciar o Mac, rode `just up`.
 - **Senha do MySQL só vale na primeira subida.** O usuário é criado quando o volume nasce. Mudou
   `DB_*` no `.env`? `just reset` e `just install`.

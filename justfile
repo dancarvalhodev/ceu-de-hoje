@@ -1,3 +1,7 @@
+# Host user's ids, read by compose.yaml: the php image and the node container run with them
+export HOST_UID := `id -u`
+export HOST_GID := `id -g`
+
 [private]
 default:
     @just --list --unsorted
@@ -39,53 +43,53 @@ logs: _docker _env
 # Open a shell in a container (default: php)
 [group('environment')]
 shell service="php": (_running service)
-    docker compose exec {{ service }} sh
+    docker compose exec {{ if service == "php" { "-u www-data" } else { "" } }} {{ service }} sh
 
 # Run an Artisan command (e.g. just artisan make:model Location)
 [group('laravel')]
 artisan *args: (_running "php")
-    docker compose exec php php artisan {{ args }}
+    docker compose exec -u www-data php php artisan {{ args }}
 
 # Apply pending migrations
 [group('laravel')]
 migrate: (_running "php")
-    docker compose exec php php artisan migrate
+    docker compose exec -u www-data php php artisan migrate
 
 # Drop all tables and run every migration again
 [group('laravel')]
 [confirm("This deletes ALL data in the dev database. Continue? [y/N]")]
 fresh: (_running "php")
-    docker compose exec php php artisan migrate:fresh
+    docker compose exec -u www-data php php artisan migrate:fresh
 
 # Open Tinker (Laravel REPL)
 [group('laravel')]
 tinker: (_running "php")
-    docker compose exec php php artisan tinker
+    docker compose exec -u www-data php php artisan tinker
 
 # Run Composer in the php container
 [group('php')]
 composer *args: (_running "php")
-    docker compose exec php composer {{ args }}
+    docker compose exec -u www-data php composer {{ args }}
 
 # Run the tests (optional filter by test name)
 [group('php')]
 test filter="": (_running "php")
-    docker compose exec php php artisan test {{ if filter == "" { "" } else { "--filter " + quote(filter) } }}
+    docker compose exec -u www-data php php artisan test {{ if filter == "" { "" } else { "--filter " + quote(filter) } }}
 
 # Static analysis (Larastan)
 [group('php')]
 stan: (_running "php")
-    docker compose exec php vendor/bin/phpstan analyse
+    docker compose exec -u www-data php vendor/bin/phpstan analyse
 
 # Check code style (Pint)
 [group('php')]
 cs: (_running "php")
-    docker compose exec php vendor/bin/pint --test
+    docker compose exec -u www-data php vendor/bin/pint --test
 
 # Fix code style (Pint)
 [group('php')]
 cs-fix: (_running "php")
-    docker compose exec php vendor/bin/pint
+    docker compose exec -u www-data php vendor/bin/pint
 
 # Run npm in a throwaway node container
 [group('frontend')]
@@ -113,7 +117,7 @@ _env:
 
 # key:generate always overwrites, so only run it while APP_KEY is empty
 _key-if-missing: (_running "php")
-    @grep -q '^APP_KEY=base64:' .env || docker compose exec php php artisan key:generate
+    @grep -q '^APP_KEY=base64:' .env || docker compose exec -u www-data php php artisan key:generate
 
 _running service: _docker _env
     @[ -n "$(docker compose ps --status running --quiet {{ service }})" ] || { echo "✖ The '{{ service }}' container is not running. Run: just up" >&2; exit 1; }

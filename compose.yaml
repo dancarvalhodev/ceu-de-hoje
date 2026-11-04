@@ -12,6 +12,9 @@ services:
     php:
         build:
             context: docker/php
+            args:
+                HOST_UID: ${HOST_UID:-1000}
+                HOST_GID: ${HOST_GID:-1000}
         depends_on:
             mysql:
                 condition: service_healthy
@@ -56,6 +59,10 @@ services:
     node:
         image: node:24-alpine
         profiles: [tools]
+        user: ${HOST_UID:-1000}:${HOST_GID:-1000}
+        environment:
+            # Any uid may run here, so the npm cache cannot rely on a home directory
+            npm_config_cache: /tmp/.npm
         working_dir: /var/www/html
         volumes:
             - .:/var/www/html

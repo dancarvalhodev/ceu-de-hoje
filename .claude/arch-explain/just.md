@@ -31,6 +31,9 @@ ingrediente (`_docker`, `_env`, `_running`) antes de servir.
 - **PHP com `exec`, Node com `run --rm`.** O `php` fica sempre de pé, então as receitas entram
   nele (`exec`). O `node` não sobe no `up`: cada `just npm` cria um container descartável.
   `just vite` usa `--service-ports` para publicar a porta 5173.
+- **Como `www-data`, não root.** As receitas do `php` entram com `exec -u www-data` (e o `shell`
+  também, quando o serviço é o `php`); o `HOST_UID`/`HOST_GID` do topo do `justfile` faz esse
+  usuário ter o seu uid. Detalhes em `infra.md`.
 - **`test`, `cs` e `stan`** rodam `php artisan test` (Pest), `pint --test` e `phpstan analyse`.
 
 ## Pegadinhas
