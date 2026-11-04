@@ -29,7 +29,34 @@ lista junto.
 - **Factory:** `user_id => User::factory()` cria um dono quando o teste não informa um;
   `->for($user)` usa um dono existente.
 
+### Cadastro (CRUD)
+
+- **`Route::resource('locations', ...)->except('show')`** cria as 6 rotas nomeadas
+  (`locations.index`, `.create`, `.store`, `.edit`, `.update`, `.destroy`) apontando para os
+  métodos de mesmo nome do `LocationController` (gerado com `make:controller --resource
+  --model=Location`). Veja com `just artisan route:list`.
+- **Route model binding:** em `edit(Location $location)`, o `{location}` da URL vira o model
+  buscado por id; id inexistente dá 404 sozinho
+  ([docs](https://laravel.com/docs/13.x/routing#route-model-binding)).
+- **`$request->user()->locations()->create(...)`** grava já com o `user_id` do logado.
+- **`UpdateLocationRequest` herda do `StoreLocationRequest`:** mesmas regras e mensagens.
+- **Um formulário, duas telas:** `locations/_form.blade.php` entra por `@include` no `create` e no
+  `edit`. `old('name', $location->name)` mostra o que foi digitado (se a validação falhou) ou o
+  valor salvo. No `create`, o `$location` é um model novo, não salvo, com o fuso
+  `America/Sao_Paulo` já escolhido.
+- **`@method('PUT')` / `@method('DELETE')`:** o HTML só envia GET e POST; o campo oculto
+  `_method` diz ao Laravel qual verbo usar.
+- **Mensagem de sucesso:** `redirect()->with('status', ...)` grava na sessão só para a próxima
+  requisição (flash); o `<x-layout>` mostra `session('status')`.
+
 ## Pegadinhas
+
+- **Fuso padrão `America/Sao_Paulo` (decisão do dev):** acerta para a maior parte do público.
+  Quem mora em outro fuso precisa trocar; se não trocar, a "noite" é calculada no horário
+  errado. Detectar o fuso do navegador fica como ideia para a etapa 5, quando entra o JS.
+
+- **Até a etapa 11 não há Policy:** um usuário logado que digitar o id de um local de outro na
+  URL de edição consegue editá-lo. A lista (`index`) já mostra só os locais do usuário.
 
 - **Migração nova = arquivo novo.** Depois do `just migrate`, não edite esta migration; mudanças
   vão num `make:migration` novo.

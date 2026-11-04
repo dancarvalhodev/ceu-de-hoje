@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -18,6 +19,5 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', LogoutController::class)->name('logout');
 
-    // Placeholder until the locations resource controller exists
-    Route::view('/locations', 'locations.index')->name('locations.index');
+    Route::resource('locations', LocationController::class)->except('show');
 });
