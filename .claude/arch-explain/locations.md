@@ -36,8 +36,7 @@ lista junto.
   métodos de mesmo nome do `LocationController` (gerado com `make:controller --resource
   --model=Location`). Veja com `just artisan route:list`.
 - **Route model binding:** em `edit(Location $location)`, o `{location}` da URL vira o model
-  buscado por id; id inexistente dá 404 sozinho
-  ([docs](https://laravel.com/docs/13.x/routing#route-model-binding)).
+  buscado por id; id inexistente dá 404 sozinho. Detalhes em `route-model-binding.md`.
 - **`$request->user()->locations()->create(...)`** grava já com o `user_id` do logado.
 - **`UpdateLocationRequest` herda do `StoreLocationRequest`:** mesmas regras e mensagens.
 - **Um formulário, duas telas:** `locations/_form.blade.php` entra por `@include` no `create` e no
@@ -55,8 +54,8 @@ lista junto.
   Quem mora em outro fuso precisa trocar; se não trocar, a "noite" é calculada no horário
   errado. Detectar o fuso do navegador fica como ideia para a etapa 5, quando entra o JS.
 
-- **Até a etapa 11 não há Policy:** um usuário logado que digitar o id de um local de outro na
-  URL de edição consegue editá-lo. A lista (`index`) já mostra só os locais do usuário.
+- **Editar e excluir passam pela `LocationPolicy`** (`Gate::authorize`): local de outro usuário
+  dá 403. Detalhes em `authorization.md`.
 
 - **Migração nova = arquivo novo.** Depois do `just migrate`, não edite esta migration; mudanças
   vão num `make:migration` novo.

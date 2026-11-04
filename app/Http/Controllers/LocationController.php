@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateLocationRequest;
 use App\Models\Location;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class LocationController extends Controller
@@ -34,11 +35,15 @@ class LocationController extends Controller
 
     public function edit(Location $location): View
     {
+        Gate::authorize('update', $location);
+
         return view('locations.edit', ['location' => $location]);
     }
 
     public function update(UpdateLocationRequest $request, Location $location): RedirectResponse
     {
+        Gate::authorize('update', $location);
+
         $location->update($request->validated());
 
         return redirect()->route('locations.index')->with('status', 'Local atualizado.');
@@ -46,6 +51,8 @@ class LocationController extends Controller
 
     public function destroy(Location $location): RedirectResponse
     {
+        Gate::authorize('delete', $location);
+
         $location->delete();
 
         return redirect()->route('locations.index')->with('status', 'Local excluído.');

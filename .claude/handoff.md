@@ -3,15 +3,17 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-11-01.
+Última atualização: 2026-11-04.
 
 ## Onde paramos
 
-- **Etapa 1 do cronograma concluída:** o dev fez o curso Getting Started with Laravel (Chirper).
-- **O projeto Laravel ainda não existe.** A pasta tem só este kit. O Mac não tem PHP nem Composer
-  para este projeto; a criação do projeto e a infraestrutura Docker (modelo do Wecker, sem Sail)
-  são as primeiras etapas do plano.
-- **Próximo:** executar `.claude/plans/etapa-2-base-do-projeto.md` com a skill `modo-codando`.
+- **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`): etapas 1 a 10 confirmadas; a
+  11 (Policy e testes) foi entregue e aguarda conferência.** Depois dela: PR para a `main` e
+  marcar as tarefas da etapa 2 no cronograma (com o dev).
+- **Pendente de decisão do dev:** o `composer audit` acusa 6 avisos em `symfony/http-foundation`,
+  `http-kernel` e `routing` (publicados em 2026-11-04; corrigidos na 8.1.11). Correção proposta:
+  `just composer update "symfony/*"`.
+- **Próximo:** plano da etapa 3 do cronograma (nota da noite).
 
 ## Decisões que valem
 
@@ -21,6 +23,9 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Infra própria, sem Sail:** Caddy + php-fpm (PHP 8.5, Ubuntu 24.04) + MySQL + Redis + Mailpit
   no Compose, comandos pelo `justfile`, no modelo do Wecker. Nada de PHP, Composer ou npm no host.
 - **Um `.env` só**, lido pelo Laravel e pelo Compose.
+- **Vários locais por usuário**, fuso padrão `America/Sao_Paulo` no cadastro.
+- **Larastan nível 5** sobre `app/`, `routes/` e `database/` (testes Pest ficam de fora).
+- **`.md` do repositório podem ser editados sem perguntar** (regra no `CLAUDE.md`).
 - **Cada mudança deixa limpos** (Pint, Larastan e testes) os arquivos que tocou.
 
 ## Como o dev quer trabalhar
@@ -52,6 +57,9 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 
 ## Pegadinhas do ambiente
 
+- **O dev também trabalha no Fedora (Linux, SELinux ativo).** Os containers `php` e `node` rodam
+  com o uid do host (`HOST_UID`/`HOST_GID` exportados pelo `justfile`); sem isso, o php-fpm não
+  grava em `storage/`. Detalhes em `arch-explain/infra.md`.
 - **Mac M1 (ARM):** use imagens com versão ARM; se alguma não tiver, avise antes de trocar.
 - **Xdebug no Docker Desktop:** `client_host = host.docker.internal`, não o `172.17.0.1` do Wecker.
 - **Sem `restart: always`:** depois de reiniciar o Mac, rode `just up`.
