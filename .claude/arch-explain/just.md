@@ -38,7 +38,6 @@ ingrediente (`_docker`, `_env`, `_running`) antes de servir.
 
 ## Pegadinhas
 
-- **`just stan`** só funciona depois que o Larastan for instalado (etapa 8 do plano).
 - **`--yes` pula o `[confirm]`.** `just --yes fresh` apaga o banco sem perguntar.
 - **`reset` apaga os volumes** deste projeto (banco e Redis), não o Docker da máquina.
 - **Cada linha do corpo é um shell novo.** Para estado entre linhas, use o modo shebang (`setup`).
