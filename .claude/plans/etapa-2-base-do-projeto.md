@@ -155,4 +155,4 @@ ajustado) fica para o plano da etapa 4, junto com o deploy na Oracle. A base é 
 - [x] 8. CI no GitHub Actions + Larastan — confirmada em 2026-11-04
 - [x] 9. Model `Location` — confirmada em 2026-11-04
 - [x] 10. Cadastro do local — confirmada em 2026-11-04
-- [ ] 11. Policy e testes — entregue, aguardando conferência
+- [x] 11. Policy e testes — confirmada em 2026-11-04

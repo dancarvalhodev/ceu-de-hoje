@@ -7,12 +7,9 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 
 ## Onde paramos
 
-- **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`): etapas 1 a 10 confirmadas; a
-  11 (Policy e testes) foi entregue e aguarda conferência.** Depois dela: PR para a `main` e
-  marcar as tarefas da etapa 2 no cronograma (com o dev).
-- **Pendente de decisão do dev:** o `composer audit` acusa 6 avisos em `symfony/http-foundation`,
-  `http-kernel` e `routing` (publicados em 2026-11-04; corrigidos na 8.1.11). Correção proposta:
-  `just composer update "symfony/*"`.
+- **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`) concluído: as 11 etapas
+  confirmadas em 2026-11-04.** Falta, com o dev: PR para a `main` e marcar as tarefas da etapa 2
+  no cronograma.
 - **Próximo:** plano da etapa 3 do cronograma (nota da noite).
 
 ## Decisões que valem
