@@ -10,9 +10,14 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`) concluído: as 11 etapas
   confirmadas em 2026-11-04.** Falta, com o dev: PR para a `main` e marcar as tarefas da etapa 2
   no cronograma.
-- **Plano da etapa 3 em execução** (`.claude/plans/etapa-3-pontuacao.md`, 7 etapas): 1 a 6
-  confirmadas; 7 (falha do Open-Meteo) entregue, aguardando conferência. Depois: PR e ajuste do
-  cronograma com os nomes novos (tabela em `docs/PROJETO.md`).
+- **Plano da etapa 3 (`.claude/plans/etapa-3-pontuacao.md`) concluído: as 7 etapas confirmadas
+  em 2026-11-05.** Falta, com o dev: PR para a `main` e ajustar o cronograma com os nomes novos
+  (tabela em `docs/PROJETO.md`).
+- **Próximo:** escrever o plano da etapa 4 (alerta e deploy), começando pela decisão do horário
+  do `CheckSkyJob`.
+- **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em
+  `tests/Pest.php`; `LOG_CHANNEL=null` no `phpunit.xml` para os testes não gravarem em
+  `storage/logs`.
 
 ## Decisões que valem
 
