@@ -24,17 +24,25 @@
             </button>
         </form>
 
-        <div class="mt-8 rounded border border-slate-800 p-6 text-center">
-            <p class="text-sm text-slate-400">Pontuação de observabilidade</p>
-            <p class="mt-2 text-6xl font-bold">{{ number_format($score, 1, ',', '') }}</p>
-            <p class="mt-1 text-sm text-slate-400">de 0 a 10</p>
-        </div>
+        @if ($score === null)
+            <p class="mt-8 rounded border border-amber-700 bg-amber-950 px-4 py-3 text-amber-300">
+                Previsão indisponível agora, tente de novo em alguns minutos.
+            </p>
+        @else
+            <div class="mt-8 rounded border border-slate-800 p-6 text-center">
+                <p class="text-sm text-slate-400">Pontuação de observabilidade</p>
+                <p class="mt-2 text-6xl font-bold">{{ number_format($score, 1, ',', '') }}</p>
+                <p class="mt-1 text-sm text-slate-400">de 0 a 10</p>
+            </div>
+        @endif
 
         <dl class="mt-6 grid grid-cols-2 gap-4">
-            <div class="rounded border border-slate-800 p-4">
-                <dt class="text-sm text-slate-400">Nuvens agora</dt>
-                <dd class="mt-1 text-2xl font-semibold">{{ $cloudCover }}%</dd>
-            </div>
+            @if ($cloudCover !== null)
+                <div class="rounded border border-slate-800 p-4">
+                    <dt class="text-sm text-slate-400">Nuvens agora</dt>
+                    <dd class="mt-1 text-2xl font-semibold">{{ $cloudCover }}%</dd>
+                </div>
+            @endif
             <div class="rounded border border-slate-800 p-4">
                 <dt class="text-sm text-slate-400">Lua</dt>
                 <dd class="mt-1 text-2xl font-semibold">{{ $moonName }}</dd>

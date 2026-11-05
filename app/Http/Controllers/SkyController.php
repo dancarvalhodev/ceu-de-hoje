@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\ForecastService;
 use App\Services\MoonPhase;
 use App\Services\SkyScore;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class SkyController extends Controller
@@ -24,8 +26,20 @@ class SkyController extends Controller
         }
 
         $now = now();
-        $cloudCover = $forecast->currentCloudCover($location);
         $moonIllumination = $moonPhase->illumination($now);
+
+        $cloudCover = null;
+        $score = null;
+        try {
+            $cloudCover = $forecast->currentCloudCover($location);
+            $score = $skyScore->calculate($cloudCover, $moonIllumination);
+        } catch (HttpClientException $exception) {
+            // The view shows "forecast unavailable"; nothing was cached, so the next visit retries.
+            Log::warning('Open-Meteo unavailable', [
+                'location_id' => $location->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
         return view('sky', [
             'locations' => $locations,
@@ -33,7 +47,7 @@ class SkyController extends Controller
             'cloudCover' => $cloudCover,
             'moonName' => $moonPhase->name($now),
             'moonIllumination' => $moonIllumination,
-            'score' => $skyScore->calculate($cloudCover, $moonIllumination),
+            'score' => $score,
         ]);
     }
 }

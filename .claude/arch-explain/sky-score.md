@@ -52,6 +52,15 @@ Arredondada a uma casa decimal.
   `$request->user()->locations()->findOrFail($id)` busca **só entre os locais do usuário**: id de
   outro usuário não é encontrado e vira 404, sem precisar da Policy.
 - **Sem locais:** a view mostra um aviso com link para cadastrar, e nada é pedido à API.
+- **Open-Meteo fora do ar:** o controller faz `catch (HttpClientException)`, a classe-mãe de
+  `RequestException` (erro HTTP, via `->throw()`) e de `ConnectionException` (sem conexão). A
+  tela mostra "Previsão indisponível agora…" em vez de erro 500, e a lua continua aparecendo.
+  A falha vai para o log com `Log::warning('Open-Meteo unavailable', [...])` (canal do
+  `LOG_CHANNEL`, [docs](https://laravel.com/docs/13.x/logging)). Não é `error_log()`, que pula os
+  canais do Laravel, nem `report()`, que trata como erro inesperado: aqui a falha é esperada.
+  Como a exceção sai de dentro do `Cache::remember`, nada é guardado e a próxima visita tenta
+  de novo. Testes em `tests/Feature/SkyForecastFailureTest.php`, com
+  `Http::response(..., 500)` e `Http::failedConnection()`.
 - Testes: `tests/Feature/SkyTest.php`, com `Http::fake` (nuvens 0%) e `travelTo` numa lua cheia
   conhecida, para a pontuação dar sempre 5,0.
 
