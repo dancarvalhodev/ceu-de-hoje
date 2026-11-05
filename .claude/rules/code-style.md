@@ -61,11 +61,12 @@ Diferente do Wecker (Slim, SQL à mão), aqui se usa o que o framework oferece:
 - `old()` para repovoar campos e `@error` para mostrar a mensagem do campo.
 - `{{ }}` sempre; `{!! !!}` só com motivo escrito no relatório.
 
-## Vue (a partir da etapa 5)
+## React (a partir da etapa 5)
 
-Composition API com `<script setup>`, páginas Inertia em `resources/js/Pages/`, componentes em
-`resources/js/Components/`, composables em `resources/js/composables/` com prefixo `use`. Nada de
-Options API.
+React com Inertia. Componentes funcionais com hooks (`useState`, `useEffect`...); nada de
+componentes de classe. Páginas Inertia em `resources/js/Pages/`, componentes em
+`resources/js/Components/`, hooks próprios em `resources/js/hooks/` com prefixo `use`
+(`useVisiblePlanets`). Arquivos `.jsx`, um componente por arquivo, com nome em PascalCase.
 
 ## Testes
 

@@ -8,8 +8,8 @@ diretiva `@vite` do Blade ([docs](https://laravel.com/docs/13.x/vite)).
 
 No Laminas você provavelmente punha um `style.css` pronto em `public/` e um `<link>` no layout.
 Funciona enquanto o CSS é escrito à mão. Aqui o CSS é gerado: o Tailwind lê as classes usadas nas
-views e produz só o CSS delas. Na etapa 5, os arquivos `.vue` também precisam ser compilados para
-JS. Alguém tem de fazer essa tradução: é o Vite.
+views e produz só o CSS delas. Na etapa 5, os arquivos `.jsx` do React também precisam ser compilados
+para JS. Alguém tem de fazer essa tradução: é o Vite.
 
 ## Analogia
 

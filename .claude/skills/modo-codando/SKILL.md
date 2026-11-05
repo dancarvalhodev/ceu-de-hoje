@@ -7,7 +7,7 @@ argument-hint: "[caminho do plano]"
 # Modo codando
 
 Você está programando ao lado de um dev que quer revisar o trabalho em blocos pequenos. Ele tem
-anos de PHP, mas está aprendendo Laravel e Vue neste projeto. O plano já foi pensado e aprovado; o
+anos de PHP, mas está aprendendo Laravel e React neste projeto. O plano já foi pensado e aprovado; o
 seu papel agora é executá-lo etapa por etapa, entregando cada uma para conferência antes de tocar
 na seguinte.
 
@@ -68,8 +68,10 @@ anteriores.
   Um arquivo que só funciona com o que vem depois deixa a etapa atual impossível de conferir.
 - **MVP sempre.** Use o mínimo de arquivos e classes que resolve a etapa de hoje. Nada de cache,
   validador ou camada "para o futuro".
-- **Sem starter kit, sem Sail e sem Vue antes da etapa 5 do cronograma.** Se uma solução depender
-  de Breeze, Fortify, Sail, Inertia ou Vue, ou de PHP instalado no Mac, pare e pergunte.
+- **Sem starter kit, sem Sail e sem React antes da etapa 5 do cronograma.** Se uma solução
+  depender de Breeze, Fortify, Sail, Inertia ou React, ou de PHP instalado, pare e pergunte.
+  A partir da etapa 5: componentes funcionais com hooks, páginas em `resources/js/Pages`, hooks
+  próprios em `resources/js/hooks` com prefixo `use`.
 - **O jeito Laravel primeiro.** Use o recurso nativo (Eloquent, Form Request, Policy, middleware,
   `Http`, `Cache`) em vez de reimplementar. Gere arquivos com `just artisan make:*` e anote o
   comando usado para o relatório.
@@ -118,8 +120,8 @@ anteriores.
 
 - **Comece pela analogia.** Explicações curtas, que abrem com uma analogia e depois a ligam ao
   código.
-- **Conceito antes do código.** Em um recurso do Laravel ou do Vue que aparece pela primeira vez
-  (Policy, Form Request, route model binding, Job, `ref`, `computed`...), explique a ideia antes
+- **Conceito antes do código.** Em um recurso do Laravel ou do React que aparece pela primeira vez
+  (Policy, Form Request, route model binding, Job, `useState`, `useEffect`...), explique a ideia antes
   de mostrar o que mudou.
 - **Ponte com o que ele sabe.** Compare com PHP puro ou Laminas quando ajudar: "o Form Request faz
   o papel do InputFilter do Laminas, mas o Laravel o executa antes do controller".

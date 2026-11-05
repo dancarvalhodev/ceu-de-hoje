@@ -10,12 +10,16 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`) concluído: as 11 etapas
   confirmadas em 2026-11-04.** Falta, com o dev: PR para a `main` e marcar as tarefas da etapa 2
   no cronograma.
-- **Próximo:** plano da etapa 3 do cronograma (nota da noite).
+- **Plano da etapa 3 escrito** em `.claude/plans/etapa-3-nota-da-noite.md` (7 etapas, decisões
+  de fórmula, local, cache e madrugada já tomadas). **Próximo:** executar com a skill
+  `modo-codando`, a partir da etapa 1.
 
 ## Decisões que valem
 
 - **Sem starter kit.** Autenticação feita à mão, como no curso.
-- **Vue e Inertia só na etapa 5.** Até lá, Blade.
+- **React e Inertia só na etapa 5** (trocado de Vue para React em 2026-11-04). Até lá, Blade.
+  Depois: componentes funcionais com hooks, páginas em `resources/js/Pages`, hooks próprios em
+  `resources/js/hooks` com prefixo `use`.
 - **Código em inglês, interface em português** (tabela de nomes em `docs/PROJETO.md`).
 - **Infra própria, sem Sail:** Caddy + php-fpm (PHP 8.5, Ubuntu 24.04) + MySQL + Redis + Mailpit
   no Compose, comandos pelo `justfile`, no modelo do Wecker. Nada de PHP, Composer ou npm no host.
@@ -30,7 +34,7 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Uma etapa por vez:** entregar, dizer como conferir, perguntar "está tudo correto?" e só seguir
   depois de um sim claro. Um comentário ou um "commitei" não é aprovação. Para um plano com etapas,
   usar a skill `modo-codando`.
-- **Ele está aprendendo Laravel e Vue:** explicar o jeito do framework, comparar com PHP puro e
+- **Ele está aprendendo Laravel e React:** explicar o jeito do framework, comparar com PHP puro e
   Laminas, nomear a mágica e linkar a documentação. Não explicar PHP básico e não gerar enormes textos
   explicativos.
 - **MVP sempre:** o mínimo de arquivos e classes. Questionar o que não vale o custo, com
