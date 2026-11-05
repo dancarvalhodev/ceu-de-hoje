@@ -37,5 +37,5 @@ classe por trás.
 just test                   # tudo
 just test "returns a"       # só os testes cujo nome contém o filtro
 just artisan make:test LocationTest --pest           # feature test
-just artisan make:test NightScoreTest --unit --pest  # unit test
+just artisan make:test SkyScoreTest --unit --pest  # unit test
 ```

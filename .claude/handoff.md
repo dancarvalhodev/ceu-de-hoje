@@ -10,7 +10,7 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`) concluído: as 11 etapas
   confirmadas em 2026-11-04.** Falta, com o dev: PR para a `main` e marcar as tarefas da etapa 2
   no cronograma.
-- **Plano da etapa 3 escrito** em `.claude/plans/etapa-3-nota-da-noite.md` (7 etapas, decisões
+- **Plano da etapa 3 escrito** em `.claude/plans/etapa-3-pontuacao.md` (7 etapas, decisões
   de fórmula, local, cache e madrugada já tomadas). **Próximo:** executar com a skill
   `modo-codando`, a partir da etapa 1.
 
@@ -25,6 +25,13 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
   no Compose, comandos pelo `justfile`, no modelo do Wecker. Nada de PHP, Composer ou npm no host.
 - **Um `.env` só**, lido pelo Laravel e pelo Compose.
 - **Vários locais por usuário**, fuso padrão `America/Sao_Paulo` no cadastro.
+- **Nota com as nuvens de agora** (2026-11-05): o `ForecastService` usa `current=cloud_cover` do
+  Open-Meteo. Saíram a janela 18h–6h, a regra da madrugada e a tabela hora a hora.
+- **Nomes novos** (2026-11-05): "nota da noite" virou **pontuação de observabilidade**
+  (`SkyScore`); a tela "Hoje à noite" virou **"Céu agora"** (rota `sky`, `SkyController`).
+  Na etapa 4: `CheckSkyJob` e `GoodSkyAlert`. **Decidir no plano da etapa 4:** o horário do
+  Job. Com as nuvens de agora, rodar às 17h avisa sobre o céu das 17h; rodar de hora em hora à
+  noite (mantendo um e-mail por dia) faz mais sentido.
 - **Larastan nível 5** sobre `app/`, `routes/` e `database/` (testes Pest ficam de fora).
 - **`.md` do repositório podem ser editados sem perguntar** (regra no `CLAUDE.md`).
 - **Cada mudança deixa limpos** (Pint, Larastan e testes) os arquivos que tocou.

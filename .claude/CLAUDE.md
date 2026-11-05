@@ -5,7 +5,8 @@ Orientações para o Claude Code neste repositório.
 ## O que é
 
 Céu de Hoje é um app Laravel 13 que diz se a noite vai ser boa para observar o céu: cada usuário
-cadastra seu local, o app cruza previsão de nuvens (Open-Meteo) e fase da lua numa nota de 0 a 10,
+cadastra seu local, o app cruza nuvens de agora (Open-Meteo) e fase da lua numa pontuação de
+observabilidade de 0 a 10,
 avisa por e-mail e, mais adiante, mostra os planetas visíveis. Requisitos e escopo de cada etapa:
 `docs/PROJETO.md`.
 

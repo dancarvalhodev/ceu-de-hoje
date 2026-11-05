@@ -20,21 +20,19 @@ linha e recebe o prato pronto. E nos testes dá para trocar a cozinha por uma de
   $response = $http->get('https://api.open-meteo.com/v1/forecast', [
       'latitude' => $location->latitude,
       'longitude' => $location->longitude,
-      'hourly' => 'cloud_cover',
-      'timezone' => $location->timezone,
-      'past_days' => 1,
-      'forecast_days' => 2,
+      'current' => 'cloud_cover',
   ])->throw();
 
-  $hours = $response->json('hourly.time');
+  $cloudCover = $response->json('current.cloud_cover');
   ```
 
   - O segundo argumento do `get()` vira a query string.
   - **`->throw()`**: o client **não** lança exceção em 4xx/5xx por padrão (diferente do Guzzle).
     O `throw()` faz um erro HTTP virar `RequestException`. Falha de conexão já vira
     `ConnectionException` sozinha.
-  - **`->json('hourly.time')`**: decodifica e pega a chave em notação de ponto (o mesmo
+  - **`->json('current.cloud_cover')`**: decodifica e pega a chave em notação de ponto (o mesmo
     `data_get` do resto do Laravel). Sem argumento, devolve o array inteiro.
+
 ### Facade, helper e construtor
 
 Quem faz a requisição é um objeto da classe `Illuminate\Http\Client\Factory`, guardado no
@@ -92,30 +90,27 @@ As três chegam ao **mesmo objeto**, então um `Http::fake()` no teste vale para
 URL de exemplo (São Paulo), para abrir no navegador:
 
 ```
-https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&hourly=cloud_cover&timezone=America%2FSao_Paulo&past_days=1&forecast_days=2
+https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&current=cloud_cover
 ```
 
-- Sem chave. `past_days=1` + `forecast_days=2` devolvem **3 dias** (ontem, hoje e amanhã, 72
-  horas): cobre a noite que começou ontem e a madrugada de amanhã.
-- Com `timezone`, as horas já vêm no fuso do local, **sem offset** no texto: `"2026-11-04T18:00"`.
+- Sem chave. `current=cloud_cover` pede só a cobertura de nuvens **de agora**; o app não recorta
+  horas nem calcula nada.
 - O que usamos da resposta:
 
   ```json
   {
-    "timezone": "America/Sao_Paulo",
-    "utc_offset_seconds": -10800,
-    "hourly": {
-      "time": ["2026-11-04T00:00", "2026-11-04T01:00", "..."],
-      "cloud_cover": [5, 49, "..."]
+    "current": {
+      "time": "2026-11-05T07:45",
+      "interval": 900,
+      "cloud_cover": 92
     }
   }
   ```
 
-  `time` e `cloud_cover` são listas paralelas: o índice 0 de uma corresponde ao índice 0 da outra.
-  `cloud_cover` vai de 0 a 100 (%). São 72 itens, índices de 0 a 71 (o visualizador de JSON do
-  navegador mostra o último como 71). `forecast_days=2` conta hoje como o primeiro dia; com
-  `past_days=1`, fica ontem, hoje e amanhã. A noite depois das 6h usa hoje e amanhã; a
-  madrugada antes das 6h usa ontem e hoje.
+  `cloud_cover` vai de 0 a 100 (%). `interval: 900` diz que o valor é atualizado a cada 15
+  minutos. Sem o parâmetro `timezone`, o `time` vem em UTC; o app não usa esse campo.
+- **Histórico:** a primeira versão pedia `hourly=cloud_cover` (72 horas) e recortava as horas
+  da noite (18h–6h). Trocado em 2026-11-05 para simplificar.
 
 ### Nos testes
 
@@ -123,12 +118,12 @@ https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&hourly=c
 Http::preventStrayRequests();
 
 Http::fake([
-    'api.open-meteo.com/*' => Http::response(['hourly' => [...]]),
+    'api.open-meteo.com/*' => Http::response(['current' => ['cloud_cover' => 92]]),
 ]);
 
 // ... chama o serviço ...
 
-Http::assertSent(fn (Request $request) => $request['timezone'] === 'America/Sao_Paulo');
+Http::assertSent(fn (Request $request) => $request['current'] === 'cloud_cover');
 ```
 
 - **`Http::fake([...])`**: padrão de URL → resposta falsa. Nada sai para a rede.
@@ -147,12 +142,10 @@ Http::assertSent(fn (Request $request) => $request['timezone'] === 'America/Sao_
 - **Sem `->throw()`, um 500 passa calado** e o `json()` devolve `null` ou a página de erro.
 - **Coordenadas arredondadas:** a API responde com o ponto da grade mais próximo
   (`-23.514938` em vez de `-23.55`). Não use o `latitude` da resposta para nada.
-- **Hora sem offset:** ao transformar `"2026-11-04T18:00"` em Carbon, passe o fuso do local
-  (`Carbon::parse($time, $timezone)`), senão ela é lida no fuso do app (UTC).
 
 ## Comandos úteis
 
 ```bash
 just tinker
-> Http::get('https://api.open-meteo.com/v1/forecast', ['latitude' => -23.55, 'longitude' => -46.63, 'hourly' => 'cloud_cover', 'timezone' => 'America/Sao_Paulo'])->json('hourly.time')
+> Http::get('https://api.open-meteo.com/v1/forecast', ['latitude' => -23.55, 'longitude' => -46.63, 'current' => 'cloud_cover'])->json('current.cloud_cover')
 ```

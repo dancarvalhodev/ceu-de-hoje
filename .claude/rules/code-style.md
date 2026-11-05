@@ -45,12 +45,12 @@ Diferente do Wecker (Slim, SQL à mão), aqui se usa o que o framework oferece:
   escrita à mão.
 - **Form Request:** `StoreLocationRequest`, `UpdateLocationRequest`. Mensagens de validação em
   português no método `messages()` do próprio request.
-- **Regra de negócio** em classes simples em `app/Services/` (`NightScore`, `ForecastService`),
+- **Regra de negócio** em classes simples em `app/Services/` (`SkyScore`, `ForecastService`),
   com dependências pelo construtor; o container do Laravel resolve sozinho.
 - **Facades** (`Auth`, `Http`, `Cache`, `Mail`) podem ser usadas em controllers, jobs e testes.
   Classes de `app/Services/` recebem o que precisam pelo construtor.
-- **Jobs** com sufixo `Job` e nome de ação (`CheckTonightJob`); **Mailables** com nome do e-mail
-  (`GoodNightAlert`).
+- **Jobs** com sufixo `Job` e nome de ação (`CheckSkyJob`); **Mailables** com nome do e-mail
+  (`GoodSkyAlert`).
 
 ## Blade (até a etapa 4)
 

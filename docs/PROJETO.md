@@ -1,7 +1,8 @@
 # Céu de Hoje
 
 Um app que diz se a noite vai ser boa para observar o céu. Cada usuário cadastra o local de onde
-observa; o app cruza a previsão de nuvens com a fase da lua, dá uma nota de 0 a 10 para a noite,
+observa; o app cruza a cobertura de nuvens com a fase da lua, dá uma pontuação de observabilidade
+de 0 a 10,
 avisa por e-mail quando ela vale a pena e mostra quais planetas estarão visíveis.
 
 É um projeto de estudo e de portfólio: o objetivo é aprender Laravel e React fazendo um app pequeno,
@@ -32,10 +33,10 @@ completo e publicado, que dê para explicar para qualquer um.
 | Etapa | Entrega | Pronto quando |
 |---|---|---|
 | 2. Base do projeto | Projeto e infra Docker (modelo Wecker); registro, login e logout; Pest; CI com Pest, Pint e Larastan; model `Location` com cadastro, Form Request e Policy | Usuário logado cadastra o próprio local e não vê o de outro; CI verde |
-| 3. Nota da noite | `ForecastService` (Open-Meteo), `MoonPhase`, `NightScore` (0 a 10), cache, tela "Hoje à noite" em Blade | A tela mostra nota, lua e nuvens do local do usuário; serviço externo testado com `Http::fake` |
-| 4. Alerta e MVP no ar | `CheckTonightJob` agendado às 17h, Mailable `GoodNightAlert`, imagem de produção e deploy com worker e scheduler | E-mail chega no Mailpit em dev; app rodando na Oracle |
+| 3. Pontuação de observabilidade | `ForecastService` (Open-Meteo), `MoonPhase`, `SkyScore` (0 a 10), cache, tela "Céu agora" em Blade | A tela mostra pontuação, lua e nuvens atuais do local do usuário; serviço externo testado com `Http::fake` |
+| 4. Alerta e MVP no ar | `CheckSkyJob` agendado (horário no plano da etapa 4), Mailable `GoodSkyAlert`, imagem de produção e deploy com worker e scheduler | E-mail chega no Mailpit em dev; app rodando na Oracle |
 | 5. React do zero | Inertia + React instalados; tela de cadastro do local convertida | Tela em React com os testes passando |
-| 6. Painel em React | Componentes `ScoreCard` e `MoonPhase`, gráfico de nuvens hora a hora (react-chartjs-2), responsivo | Página "Hoje à noite" inteira em React, publicada |
+| 6. Painel em React | Componentes `ScoreCard` e `MoonPhase`, gráfico de nuvens hora a hora (react-chartjs-2), responsivo | Página "Céu agora" inteira em React, publicada |
 | 7. Planetas visíveis | Hook `useVisiblePlanets` com astronomy-engine, lista e melhor horário | Planetas acima do horizonte à noite no painel |
 | 8. Acabamento | README com prints, decisões e diagrama; GIF de demonstração | Projeto apresentável no GitHub |
 
@@ -45,9 +46,9 @@ Cada etapa ganha seu plano em `.claude/plans/` quando chegar a vez dela.
 
 - **Local:** nome, latitude (-90 a 90), longitude (-180 a 180) e fuso horário (identificador IANA,
   ex.: `America/Sao_Paulo`). Pertence a um usuário; ninguém vê nem altera o local de outro.
-- **Noite:** das 18h às 6h do dia seguinte, no fuso do local.
-- **Nota da noite (etapa 3):** combina a cobertura de nuvens nas horas da noite com a iluminação da
-  lua. A fórmula exata é decidida no plano da etapa 3.
+- **Pontuação de observabilidade (etapa 3):** de 0 a 10, combina a cobertura de nuvens no momento
+  da consulta com a iluminação da lua. Fórmula no plano da etapa 3 e em
+  `.claude/arch-explain/sky-score.md`.
 - **Alerta (etapa 4):** um e-mail por usuário por dia, só quando a nota passar de um limite a
   definir no plano da etapa 4.
 
@@ -60,11 +61,11 @@ O cronograma está em português; o código fica em inglês para seguir as conve
 | Local | `App\Models\Location` (tabela `locations`) |
 | PrevisaoService | `App\Services\ForecastService` |
 | FaseDaLua | `App\Services\MoonPhase` |
-| NotaDaNoite | `App\Services\NightScore` |
-| Job VerificarNoite | `App\Jobs\CheckTonightJob` |
-| Mailable AlertaNoiteBoa | `App\Mail\GoodNightAlert` |
+| NotaDaNoite (pontuação de observabilidade) | `App\Services\SkyScore` |
+| Job VerificarNoite | `App\Jobs\CheckSkyJob` |
+| Mailable AlertaNoiteBoa | `App\Mail\GoodSkyAlert` |
 | CartaoNota / FaseLua (React) | `ScoreCard.jsx` / `MoonPhase.jsx` |
 | usePlanetasVisiveis | `useVisiblePlanets` |
-| Tela "Hoje à noite" | rota `tonight` |
+| Tela "Hoje à noite" (agora "Céu agora") | rota `sky` |
 
 Textos de interface, mensagens de validação e e-mails ficam em português.
