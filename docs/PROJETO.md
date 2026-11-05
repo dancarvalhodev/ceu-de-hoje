@@ -51,8 +51,8 @@ Cada etapa ganha seu plano em `.claude/plans/` quando chegar a vez dela.
 - **Pontuação de observabilidade (etapa 3):** de 0 a 10, combina a cobertura de nuvens no momento
   da consulta com a iluminação da lua. Fórmula no plano da etapa 3 e em
   `.claude/arch-explain/sky-score.md`.
-- **Alerta (etapa 4):** um e-mail por usuário por dia, só quando a pontuação passar de um limite a
-  definir no plano da etapa 4.
+- **Alerta (etapa 4):** todo dia às 20h (São Paulo), um e-mail por usuário quando o melhor local
+  dele tem pontuação 7 ou mais.
 
 ## Nomes: cronograma × código
 

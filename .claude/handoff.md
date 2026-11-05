@@ -15,8 +15,8 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
   (tabela em `docs/PROJETO.md`).
 - **Plano `.claude/plans/melhorias-local.md`** (botão "Usar minha localização") concluído em
   2026-11-05; testado pelo dev no navegador.
-- **Próximo:** escrever o plano da etapa 4 (alerta e deploy), começando pela decisão do horário
-  do `CheckSkyJob`.
+- **Etapa 4 dividida em dois planos.** 4a (alerta, local): `.claude/plans/etapa-4a-alerta.md`,
+  escrito, aguardando aprovação. 4b (MVP no ar): a escrever depois do 4a.
 - **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em
   `tests/Pest.php`; `LOG_CHANNEL=null` no `phpunit.xml` para os testes não gravarem em
   `storage/logs`.
@@ -35,9 +35,14 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Pontuação de observabilidade** (`SkyScore`, 0 a 10) com a cobertura de nuvens do momento da
   consulta (`current=cloud_cover` do Open-Meteo) e a iluminação da lua (pacote
   `solaris/php-moon-phase`). Tela **"Céu agora"** (rota `sky`, `SkyController`).
-- **Etapa 4:** `CheckSkyJob` e `GoodSkyAlert`. **Decidir no plano da etapa 4:** o horário do Job.
-  Como a pontuação usa as nuvens de agora, rodar de hora em hora à noite (mantendo um e-mail por
-  dia) faz mais sentido que um horário fixo.
+- **Alerta (etapa 4a):** `CheckSkyJob` uma vez por dia às 20h (São Paulo); `GoodSkyAlert` para quem
+  tem pontuação 7 ou mais no melhor local; um e-mail por usuário.
+- **Deploy (etapa 4b):** Oracle Cloud, na VM ARM do `landing-page`, no mesmo modelo (imagens ARM
+  no GHCR, `ssh` + `docker compose`, Caddy "edge" na rede `edge`). Projeto Compose separado
+  (`-p ceu-prod`, `/srv/ceu-de-hoje`) com MySQL e Redis próprios, sem portas no host; bloco novo
+  no Caddyfile do edge para o subdomínio `ceudehoje.`. E-mail com **Resend** (driver nativo),
+  verificando o domínio. Antes do deploy: budget alert de US$ 1 na Oracle (conta pay-as-you-go) e
+  conferir no `landing-page` de onde vem o `COMPOSE_PROJECT_NAME` usado no alias `site-prod`.
 - **Larastan nível 5** sobre `app/`, `routes/` e `database/` (testes Pest ficam de fora).
 - **`.md` do repositório podem ser editados sem perguntar** (regra no `CLAUDE.md`).
 - **Cada mudança deixa limpos** (Pint, Larastan e testes) os arquivos que tocou.
