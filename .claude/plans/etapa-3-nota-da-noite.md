@@ -127,7 +127,7 @@ etapa 3 no cronograma.
 
 ## Progresso
 
-- [ ] 1. Explorar o Open-Meteo e documentar
+- [ ] 1. Explorar o Open-Meteo e documentar — entregue, aguardando conferência
 - [ ] 2. `ForecastService`: nuvens das horas da noite
 - [ ] 3. `MoonPhase`: iluminação e nome da fase
 - [ ] 4. `NightScore`: a nota de 0 a 10
