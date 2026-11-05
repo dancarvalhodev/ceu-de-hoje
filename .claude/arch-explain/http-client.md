@@ -110,6 +110,28 @@ https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&current=
   `cloud_cover` vai de 0 a 100 (%). `interval: 900` diz que o valor é atualizado a cada 15
   minutos. Sem o parâmetro `timezone`, o `time` vem em UTC; o app não usa esse campo.
 
+### Cache da resposta
+
+A resposta do Open-Meteo fica **1 hora** no cache (Redis em dev, `array` nos testes):
+
+```php
+return $this->cache->remember($cacheKey, self::CACHE_SECONDS, function () use ($location) {
+    // ... chamada ao Open-Meteo ...
+});
+```
+
+- **`remember(chave, segundos, closure)`** ([docs](https://laravel.com/docs/13.x/cache#retrieve-store)):
+  se a chave existe, devolve o valor guardado sem rodar a closure; se não, roda a closure, guarda
+  o resultado e devolve. É o "busca, e se não tiver, calcula e guarda" que você faria à mão com
+  `get` + `set` no Redis.
+- **Chave:** `cloud-cover:{latitude},{longitude}`. Dois locais no mesmo ponto (de usuários
+  diferentes, inclusive) usam a mesma resposta.
+- **Se a closure lançar exceção** (o `->throw()` de um 500, uma falha de conexão), nada é
+  guardado: a próxima consulta tenta a API de novo.
+- **`Repository` pelo construtor:** `Illuminate\Contracts\Cache\Repository` é o que a facade
+  `Cache` esconde, como o `Factory` é o que a `Http` esconde. O driver (Redis, array) vem do
+  `CACHE_STORE`; o serviço não sabe qual é.
+
 ### Nos testes
 
 ```php
@@ -140,6 +162,10 @@ Http::assertSent(fn (Request $request) => $request['current'] === 'cloud_cover')
 - **Sem `->throw()`, um 500 passa calado** e o `json()` devolve `null` ou a página de erro.
 - **Coordenadas arredondadas:** a API responde com o ponto da grade mais próximo
   (`-23.514938` em vez de `-23.55`). Não use o `latitude` da resposta para nada.
+
+- **Cache vazio em cada teste:** o driver `array` vive só na memória do teste, então um teste não
+  herda o cache do outro. Em dev (Redis), o valor fica 1 hora; para forçar uma consulta nova,
+  `just artisan cache:clear`.
 
 ## Comandos úteis
 

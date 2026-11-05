@@ -46,8 +46,9 @@ Plano da etapa 2 concluído: login próprio, model `Location` (vários por usuá
 2. **Local na tela:** um por vez, com uma lista suspensa num formulário GET
    (`/sky?location=3`), sem JavaScript. Sem `location` na URL, abre o primeiro local em ordem
    alfabética.
-3. **Cache:** com `Cache::remember`, chave com as coordenadas, então dois locais no mesmo ponto
-   compartilham a resposta. Duração a confirmar na etapa 5 (a API atualiza a cada 15 minutos).
+3. **Cache:** 1 hora, com `Cache::remember`, chave com as coordenadas, então dois locais no
+   mesmo ponto compartilham a resposta. A API atualiza a cada 15 minutos, mas a diferença em 1
+   hora raramente é perceptível.
 4. **Nuvens de agora:** o app usa só a cobertura de nuvens do momento da consulta
    (`current=cloud_cover`), seja dia ou noite.
 5. **Nomes:** **pontuação de observabilidade** (classe `SkyScore`) e tela **"Céu agora"** (rota
@@ -88,7 +89,7 @@ Plano da etapa 2 concluído: login próprio, model `Location` (vários por usuá
    explicando a regra. Unit test com os cinco casos da tabela. Criar
    `.claude/arch-explain/sky-score.md` com a regra, a tabela e onde ela está no código.
 5. **Cache da previsão.** No `ForecastService`, envolver a chamada ao Open-Meteo em
-   `Cache::remember` (pelo `Repository` injetado), chave com as coordenadas (decisão 3). Teste: duas chamadas seguidas fazem uma requisição só
+   `Cache::remember` (pelo `Repository` injetado) por 1 hora, chave com as coordenadas (decisão 3). Teste: duas chamadas seguidas fazem uma requisição só
    (`Http::assertSentCount(1)`). Atualizar `http-client.md` com a parte do cache.
 6. **Tela "Céu agora".** Controller invocável `SkyController`
    (`make:controller SkyController --invokable`), rota `GET /sky` com nome `sky` no
@@ -128,7 +129,7 @@ etapa 3 no cronograma.
 - [x] 1. Explorar o Open-Meteo e documentar — confirmada em 2026-11-05
 - [x] 2. `ForecastService`: nuvens de agora — confirmada em 2026-11-05
 - [x] 3. `MoonPhase`: iluminação e nome da fase — confirmada em 2026-11-05
-- [ ] 4. `SkyScore`: a pontuação de 0 a 10 — entregue, aguardando conferência
-- [ ] 5. Cache da previsão
+- [x] 4. `SkyScore`: a pontuação de 0 a 10 — confirmada em 2026-11-05
+- [ ] 5. Cache da previsão — entregue, aguardando conferência
 - [ ] 6. Tela "Céu agora"
 - [ ] 7. Falha do Open-Meteo
