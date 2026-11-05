@@ -109,8 +109,6 @@ https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&current=
 
   `cloud_cover` vai de 0 a 100 (%). `interval: 900` diz que o valor é atualizado a cada 15
   minutos. Sem o parâmetro `timezone`, o `time` vem em UTC; o app não usa esse campo.
-- **Histórico:** a primeira versão pedia `hourly=cloud_cover` (72 horas) e recortava as horas
-  da noite (18h–6h). Trocado em 2026-11-05 para simplificar.
 
 ### Nos testes
 

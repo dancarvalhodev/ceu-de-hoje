@@ -51,8 +51,9 @@ lista junto.
 ## Pegadinhas
 
 - **Fuso padrão `America/Sao_Paulo` (decisão do dev):** acerta para a maior parte do público.
-  Quem mora em outro fuso precisa trocar; se não trocar, a "noite" é calculada no horário
-  errado. Detectar o fuso do navegador fica como ideia para a etapa 5, quando entra o JS.
+  Quem mora em outro fuso precisa trocar. A pontuação não depende dele (usa as nuvens do momento
+  da consulta), mas os horários do alerta (etapa 4) e dos planetas (etapa 7) vão depender.
+  Detectar o fuso do navegador fica como ideia para a etapa 5, quando entra o JS.
 
 - **Editar e excluir passam pela `LocationPolicy`** (`Gate::authorize`): local de outro usuário
   dá 403. Detalhes em `authorization.md`.

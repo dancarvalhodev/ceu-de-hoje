@@ -1,4 +1,4 @@
-# Plano: etapa 3 do cronograma — Pontuação de observabilidade (no cronograma: "Nota da noite")
+# Plano: etapa 3 do cronograma — Pontuação de observabilidade
 
 ## Objetivo
 
@@ -20,14 +20,12 @@ Plano da etapa 2 concluído: login próprio, model `Location` (vários por usuá
 
 - **Open-Meteo** (`https://api.open-meteo.com/v1/forecast`), sem chave. Parâmetros:
   `latitude`, `longitude` e `current=cloud_cover`. A resposta traz `current.cloud_cover` (0 a
-  100) e `current.time`, atualizado a cada 15 minutos (`current.interval = 900`). Conferido em
-  2026-11-05.
-- **Lua:** a iluminação (0 = nova, 1 = cheia) sai de uma conta com a data: idade da lua =
-  dias desde uma lua nova conhecida (2000-01-06 18:14 UTC), módulo 29,530588853 (o mês lunar);
-  iluminação = (1 − cos(2π × idade / 29,53)) / 2. Erro de algumas horas, irrelevante para a nota.
-  Nenhuma API.
+  100) e `current.time`, atualizado a cada 15 minutos (`current.interval = 900`).
+- **Lua:** pacote `solaris/php-moon-phase` (v3.4, MIT). `new Solaris\MoonPhase($data)` dá
+  `getIllumination()` (0 = nova, 1 = cheia) e `getPhaseNameEnum()` (8 fases em inglês). Roda
+  local, sem API.
 
-## Decisões do dev (2026-11-04)
+## Decisões do dev
 
 1. **Fórmula da pontuação de observabilidade:** começa em 10 e perde por dois motivos. As nuvens
    tiram na mesma proporção (30% de nuvens → fica 70% da pontuação; céu fechado → 0). A lua tira
@@ -50,12 +48,11 @@ Plano da etapa 2 concluído: login próprio, model `Location` (vários por usuá
    alfabética.
 3. **Cache:** com `Cache::remember`, chave com as coordenadas, então dois locais no mesmo ponto
    compartilham a resposta. Duração a confirmar na etapa 5 (a API atualiza a cada 15 minutos).
-4. **Nuvens de agora (2026-11-05, substitui a janela 18h–6h e a regra da madrugada):** o app usa
-   só a cobertura de nuvens do momento da consulta (`current=cloud_cover`), seja dia ou noite.
-   Sem recorte de horas e sem tabela hora a hora.
-5. **Nomes (2026-11-05):** como não depende mais da noite, "nota da noite" vira **pontuação de
-   observabilidade** (classe `SkyScore`) e a tela "Hoje à noite" vira **"Céu agora"** (rota
+4. **Nuvens de agora:** o app usa só a cobertura de nuvens do momento da consulta
+   (`current=cloud_cover`), seja dia ou noite.
+5. **Nomes:** **pontuação de observabilidade** (classe `SkyScore`) e tela **"Céu agora"** (rota
    `GET /sky` com nome `sky`, `SkyController`, view `sky.blade.php`).
+6. **Lua:** pacote `solaris/php-moon-phase`, com uma casca fina em `App\Services\MoonPhase`.
 
 ## Regras de sempre
 
@@ -80,9 +77,10 @@ Plano da etapa 2 concluído: login próprio, model `Location` (vários por usuá
    exceção. Testes em `tests/Feature/ForecastServiceTest.php` (o `Http::fake` precisa do app; os
    testes de `tests/Unit` não sobem o Laravel): parâmetros enviados (`Http::assertSent`) e valor
    devolvido.
-3. **`MoonPhase`: iluminação e nome da fase.** `app/Services/MoonPhase.php`, sem dependências:
+3. **`MoonPhase`: iluminação e nome da fase.** `just composer require solaris/php-moon-phase`.
+   `app/Services/MoonPhase.php`, uma casca fina sobre o pacote:
    `illumination(CarbonInterface $moment): float` (0 a 1) e `name(CarbonInterface $moment): string`
-   em português (Nova, Crescente, Cheia, Minguante). Unit test em `tests/Unit/MoonPhaseTest.php`
+   em português (as 8 fases do pacote viram Nova, Crescente, Cheia, Minguante). Unit test em `tests/Unit/MoonPhaseTest.php`
    com datas conhecidas (a lua nova de referência ≈ 0; uma lua cheia conhecida, como
    2025-01-13, ≈ 1), com tolerância.
 4. **`SkyScore`: a pontuação de 0 a 10.** `app/Services/SkyScore.php`: recebe a cobertura de
@@ -111,25 +109,25 @@ etapa 3 no cronograma.
 
 ## Fora deste plano
 
-- Lua acima ou abaixo do horizonte (nascer e pôr da lua): a nota usa só a iluminação.
+- Lua acima ou abaixo do horizonte (nascer e pôr da lua): a pontuação usa só a iluminação.
 - Alerta por e-mail e Job agendado: etapa 4 do cronograma.
-- Detectar o fuso pelo navegador e qualquer gráfico: etapas 5 e 6 (React).
+- Detectar o fuso pelo navegador: etapa 5 (React).
 
 ## Relação com o cronograma
 
 | Sessão do cronograma | Etapas deste plano |
 |---|---|
 | 1. Estudar o HTTP Client e testar o Open-Meteo no navegador | 1 |
-| 2. ForecastService buscando nuvens por hora, com Http::fake | 2 |
-| 3. MoonPhase e NotaDaNoite (`SkyScore`), com testes | 3 e 4 |
+| 2. ForecastService buscando nuvens, com Http::fake | 2 |
+| 3. FaseDaLua e PontuacaoObservabilidade, com testes | 3 e 4 |
 | 4. Cache da previsão com Cache::remember | 5 |
-| 5. Tela "Hoje à noite" (agora "Céu agora") em Blade | 6 e 7 |
+| 5. Tela "Céu agora" em Blade | 6 e 7 |
 
 ## Progresso
 
 - [x] 1. Explorar o Open-Meteo e documentar — confirmada em 2026-11-05
-- [ ] 2. `ForecastService`: nuvens de agora — refeita com a decisão 4 nova, aguardando conferência
-- [ ] 3. `MoonPhase`: iluminação e nome da fase
+- [x] 2. `ForecastService`: nuvens de agora — confirmada em 2026-11-05
+- [ ] 3. `MoonPhase`: iluminação e nome da fase — entregue, aguardando conferência
 - [ ] 4. `SkyScore`: a pontuação de 0 a 10
 - [ ] 5. Cache da previsão
 - [ ] 6. Tela "Céu agora"

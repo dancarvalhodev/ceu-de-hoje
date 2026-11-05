@@ -3,21 +3,20 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-11-04.
+Última atualização: 2026-11-05.
 
 ## Onde paramos
 
 - **Plano da etapa 2 (`.claude/plans/etapa-2-base-do-projeto.md`) concluído: as 11 etapas
   confirmadas em 2026-11-04.** Falta, com o dev: PR para a `main` e marcar as tarefas da etapa 2
   no cronograma.
-- **Plano da etapa 3 escrito** em `.claude/plans/etapa-3-pontuacao.md` (7 etapas, decisões
-  de fórmula, local, cache e madrugada já tomadas). **Próximo:** executar com a skill
-  `modo-codando`, a partir da etapa 1.
+- **Plano da etapa 3 em execução** (`.claude/plans/etapa-3-pontuacao.md`, 7 etapas): 1 e 2
+  confirmadas; 3 (`MoonPhase`) entregue, aguardando conferência. Progresso no fim do plano.
 
 ## Decisões que valem
 
 - **Sem starter kit.** Autenticação feita à mão, como no curso.
-- **React e Inertia só na etapa 5** (trocado de Vue para React em 2026-11-04). Até lá, Blade.
+- **React e Inertia só na etapa 5.** Até lá, Blade.
   Depois: componentes funcionais com hooks, páginas em `resources/js/Pages`, hooks próprios em
   `resources/js/hooks` com prefixo `use`.
 - **Código em inglês, interface em português** (tabela de nomes em `docs/PROJETO.md`).
@@ -25,13 +24,12 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
   no Compose, comandos pelo `justfile`, no modelo do Wecker. Nada de PHP, Composer ou npm no host.
 - **Um `.env` só**, lido pelo Laravel e pelo Compose.
 - **Vários locais por usuário**, fuso padrão `America/Sao_Paulo` no cadastro.
-- **Nota com as nuvens de agora** (2026-11-05): o `ForecastService` usa `current=cloud_cover` do
-  Open-Meteo. Saíram a janela 18h–6h, a regra da madrugada e a tabela hora a hora.
-- **Nomes novos** (2026-11-05): "nota da noite" virou **pontuação de observabilidade**
-  (`SkyScore`); a tela "Hoje à noite" virou **"Céu agora"** (rota `sky`, `SkyController`).
-  Na etapa 4: `CheckSkyJob` e `GoodSkyAlert`. **Decidir no plano da etapa 4:** o horário do
-  Job. Com as nuvens de agora, rodar às 17h avisa sobre o céu das 17h; rodar de hora em hora à
-  noite (mantendo um e-mail por dia) faz mais sentido.
+- **Pontuação de observabilidade** (`SkyScore`, 0 a 10) com a cobertura de nuvens do momento da
+  consulta (`current=cloud_cover` do Open-Meteo) e a iluminação da lua (pacote
+  `solaris/php-moon-phase`). Tela **"Céu agora"** (rota `sky`, `SkyController`).
+- **Etapa 4:** `CheckSkyJob` e `GoodSkyAlert`. **Decidir no plano da etapa 4:** o horário do Job.
+  Como a pontuação usa as nuvens de agora, rodar de hora em hora à noite (mantendo um e-mail por
+  dia) faz mais sentido que um horário fixo.
 - **Larastan nível 5** sobre `app/`, `routes/` e `database/` (testes Pest ficam de fora).
 - **`.md` do repositório podem ser editados sem perguntar** (regra no `CLAUDE.md`).
 - **Cada mudança deixa limpos** (Pint, Larastan e testes) os arquivos que tocou.
