@@ -19,6 +19,7 @@
                 @endguest
 
                 @auth
+                    <a href="{{ route('sky') }}" class="hover:underline">Céu agora</a>
                     <a href="{{ route('locations.index') }}" class="hover:underline">Meus locais</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
