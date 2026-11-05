@@ -127,8 +127,8 @@ etapa 3 no cronograma.
 
 - [x] 1. Explorar o Open-Meteo e documentar — confirmada em 2026-11-05
 - [x] 2. `ForecastService`: nuvens de agora — confirmada em 2026-11-05
-- [ ] 3. `MoonPhase`: iluminação e nome da fase — entregue, aguardando conferência
-- [ ] 4. `SkyScore`: a pontuação de 0 a 10
+- [x] 3. `MoonPhase`: iluminação e nome da fase — confirmada em 2026-11-05
+- [ ] 4. `SkyScore`: a pontuação de 0 a 10 — entregue, aguardando conferência
 - [ ] 5. Cache da previsão
 - [ ] 6. Tela "Céu agora"
 - [ ] 7. Falha do Open-Meteo
