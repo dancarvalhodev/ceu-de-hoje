@@ -112,7 +112,10 @@ https://api.open-meteo.com/v1/forecast?latitude=-23.55&longitude=-46.63&hourly=c
   ```
 
   `time` e `cloud_cover` são listas paralelas: o índice 0 de uma corresponde ao índice 0 da outra.
-  `cloud_cover` vai de 0 a 100 (%).
+  `cloud_cover` vai de 0 a 100 (%). São 72 itens, índices de 0 a 71 (o visualizador de JSON do
+  navegador mostra o último como 71). `forecast_days=2` conta hoje como o primeiro dia; com
+  `past_days=1`, fica ontem, hoje e amanhã. A noite depois das 6h usa hoje e amanhã; a
+  madrugada antes das 6h usa ontem e hoje.
 
 ### Nos testes
 
