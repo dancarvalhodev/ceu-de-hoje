@@ -33,6 +33,13 @@
 </div>
 
 <div>
+    <button type="button" data-geolocation class="text-sm text-indigo-400 hover:underline">
+        Usar minha localização
+    </button>
+    <p data-geolocation-status class="mt-1 text-sm text-slate-400"></p>
+</div>
+
+<div>
     <label for="timezone" class="block text-sm">Fuso horário</label>
     <select id="timezone" name="timezone" required
         class="mt-1 w-full rounded border border-slate-700 bg-slate-900 px-3 py-2">

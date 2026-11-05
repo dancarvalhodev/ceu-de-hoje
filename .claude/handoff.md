@@ -13,6 +13,8 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Plano da etapa 3 (`.claude/plans/etapa-3-pontuacao.md`) concluído: as 7 etapas confirmadas
   em 2026-11-05.** Falta, com o dev: PR para a `main` e ajustar o cronograma com os nomes novos
   (tabela em `docs/PROJETO.md`).
+- **Plano `.claude/plans/melhorias-local.md`** (botão "Usar minha localização") concluído em
+  2026-11-05; testado pelo dev no navegador.
 - **Próximo:** escrever o plano da etapa 4 (alerta e deploy), começando pela decisão do horário
   do `CheckSkyJob`.
 - **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em

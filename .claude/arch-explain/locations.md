@@ -50,6 +50,10 @@ lista junto.
 
 ## Pegadinhas
 
+- **Decimal com vírgula no formulário:** o `<input type="number">` segue o idioma do navegador.
+  Em português, digite `-23,55`; com ponto, o navegador pode recusar. Ele envia sempre com ponto
+  (`-23.55`), então o Form Request e o banco recebem o valor certo.
+
 - **Fuso padrão `America/Sao_Paulo` (decisão do dev):** acerta para a maior parte do público.
   Quem mora em outro fuso precisa trocar. A pontuação não depende dele (usa as nuvens do momento
   da consulta), mas os horários do alerta (etapa 4) e dos planetas (etapa 7) vão depender.

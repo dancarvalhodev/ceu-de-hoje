@@ -96,6 +96,15 @@ test('a user cannot edit, update or delete another user location', function () {
     expect($location->fresh()->name)->toBe('Do vizinho');
 });
 
+test('the location form offers to use the browser location', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('locations.create'));
+
+    $response->assertOk();
+    $response->assertSee('Usar minha localização');
+});
+
 test('a visitor is sent to the login page', function () {
     $location = Location::factory()->create();
 

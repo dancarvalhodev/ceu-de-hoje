@@ -33,7 +33,8 @@ O Dan tem cinco anos de PHP (puro e Laminas) e trabalha com PHP + MySQL + Redis 
 - **Sem starter kit.** Nada de Breeze, Jetstream, Fortify ou kits React/Vue/Livewire. Registro,
   login e logout são feitos à mão, como no curso.
 - **React só na etapa 5.** Até lá, telas em Blade. Não instale React, Inertia nem bibliotecas JS
-  antes disso, mesmo que pareça adiantar trabalho. A partir da etapa 5: React com Inertia
+  antes disso, mesmo que pareça adiantar trabalho. Exceção única: `resources/js/geolocation.js`,
+  JS puro com a API do navegador para o botão "Usar minha localização". A partir da etapa 5: React com Inertia
   (convenções em @rules/code-style.md).
 - **Sem Sail e sem PHP no host.** A infraestrutura é própria, no modelo do projeto Wecker do dev:
   Caddy + php-fpm (PHP 8.5) + MySQL + Redis + Mailpit no Docker Compose, comandos pelo `justfile`.

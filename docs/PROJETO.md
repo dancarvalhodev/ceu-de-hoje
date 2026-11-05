@@ -25,7 +25,8 @@ completo e publicado, que dê para explicar para qualquer um.
 
 - Starter kit (Breeze, Jetstream, kits React/Vue/Livewire) e Fortify. O login é feito à mão, como
   no curso Getting Started with Laravel.
-- React, Inertia ou qualquer framework JS antes da etapa 5.
+- React, Inertia ou qualquer framework JS antes da etapa 5. A única exceção é o botão "Usar minha
+  localização" do cadastro de local, em JS puro (`resources/js/geolocation.js`).
 - Login social, recuperação de senha, verificação de e-mail, painel de admin, API pública,
   multi-idioma. Podem virar versão 2.
 
