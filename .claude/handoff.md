@@ -17,8 +17,9 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
   2026-11-05; testado pelo dev no navegador.
 - **Etapa 4 dividida em dois planos.** 4a (alerta, local): `.claude/plans/etapa-4a-alerta.md`,
   **concluído: as 5 etapas confirmadas em 2026-11-06** (e-mail conferido no Mailpit). Falta, com
-  o dev: PR para a `main` e marcar as tarefas no cronograma. 4b (MVP no ar): a
-  escrever depois do 4a.
+  o dev: PR para a `main` e marcar as tarefas no cronograma. 4b (MVP no ar):
+  `.claude/plans/etapa-4b-mvp-no-ar.md`, conferido e aprovado em 2026-11-06, nenhuma etapa
+  iniciada; tem 5 pontos em "Decidir com o dev", perguntados antes da etapa que depende de cada um.
 - **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em
   `tests/Pest.php`; `LOG_CHANNEL=null` no `phpunit.xml` para os testes não gravarem em
   `storage/logs`.
