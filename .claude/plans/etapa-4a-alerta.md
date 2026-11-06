@@ -76,7 +76,7 @@ O Mailable vem antes do Job (etapa 3) para o teste do Job já poder conferir o e
 
 ## Progresso
 
-- [ ] 1. Estudar e documentar filas, Jobs, Scheduler e Mail
+- [ ] 1. Estudar e documentar filas, Jobs, Scheduler e Mail — entregue, aguardando conferência
 - [ ] 2. Worker e scheduler no Compose
 - [ ] 3. Mailable `GoodSkyAlert`
 - [ ] 4. `CheckSkyJob`
