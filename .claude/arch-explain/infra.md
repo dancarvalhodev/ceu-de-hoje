@@ -20,6 +20,8 @@ Um **restaurante**. O Caddy é o **garçom**: entrega na hora o que já está pr
 |---|---|---|---|---|
 | `caddy` | `caddy:2.11.7-alpine` | `${APP_PORT}` (80) | `public/` (leitura), `Caddyfile` | Serve estáticos e repassa o resto ao `php:9000` |
 | `php` | `docker/php/Dockerfile` (Ubuntu 24.04 + PPA Ondřej, PHP 8.5) | nenhuma | projeto inteiro, `php.ini` | php-fpm, Artisan, Composer |
+| `queue` | a do `php` (`extends: php`) | nenhuma | igual ao `php` | Worker da fila (`queue:work`) |
+| `scheduler` | a do `php` (`extends: php`) | nenhuma | igual ao `php` | Agendamento (`schedule:work`) |
 | `mysql` | `mysql:8.4` | nenhuma | volume `mysql-data` | Banco de dev |
 | `redis` | `redis:8.4-alpine` | nenhuma | volume `redis-data` | Sessão, cache e fila |
 | `mailpit` | `axllent/mailpit` | 8025 | — | E-mails de dev em http://localhost:8025 |

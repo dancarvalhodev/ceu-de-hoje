@@ -123,6 +123,11 @@ O código do `handle()` está no livro do padeiro (o app carregado no worker).
 é um processo que **não termina**: fica esperando Jobs. Ele carrega o app **uma vez** e reaproveita
 a memória entre os Jobs. No Compose vira um serviço próprio (`queue`), com a mesma imagem do `php`.
 
+No `compose.yaml`, `queue` e `scheduler` usam `extends: php`: herdam build, volumes e
+`depends_on` do `php` e trocam só o `command` (e o `user`, para gravar em `storage/` com o seu
+uid). É um container por processo, como no Docker em geral: o `php` roda o fpm, o `queue` o
+worker, o `scheduler` o relógio.
+
 ### Scheduler
 
 ```php
@@ -185,8 +190,10 @@ Mail::assertNothingSent();
 ## Pegadinhas
 
 - **O worker não vê código novo.** Ele carregou o app na memória ao subir; depois de mudar um Job
-  ou um serviço que ele usa, rode `just restart-workers` (`queue:restart` avisa o worker para
-  terminar o Job atual e reiniciar).
+  ou um serviço que ele usa, rode `just restart-workers` (`docker compose restart queue
+  scheduler`; o worker termina o Job atual antes de sair). O `artisan queue:restart` só faz o
+  worker sair e espera que alguém o suba de novo; aqui os containers não têm `restart:`, por isso
+  a receita reinicia pelo Compose.
 - **`send()` × `queue()` no `Mail::fake()`:** um Mailable enviado com `queue()` (ou que implemente
   `ShouldQueue`) aparece em `assertQueued`, não em `assertSent`.
 - **Construtor do Job só com dados simples ou models.** Um serviço ou uma conexão no construtor

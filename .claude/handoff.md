@@ -16,7 +16,7 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Plano `.claude/plans/melhorias-local.md`** (botão "Usar minha localização") concluído em
   2026-11-05; testado pelo dev no navegador.
 - **Etapa 4 dividida em dois planos.** 4a (alerta, local): `.claude/plans/etapa-4a-alerta.md`,
-  em execução (etapa 1 entregue em 2026-11-06, aguardando conferência). 4b (MVP no ar): a
+  em execução (etapa 1 confirmada em 2026-11-06; etapa 2 entregue, aguardando conferência). 4b (MVP no ar): a
   escrever depois do 4a.
 - **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em
   `tests/Pest.php`; `LOG_CHANNEL=null` no `phpunit.xml` para os testes não gravarem em

@@ -66,6 +66,11 @@ fresh: (_running "php")
 tinker: (_running "php")
     docker compose exec -u www-data php php artisan tinker
 
+# Restart the queue worker and the scheduler so they load the new code
+[group('laravel')]
+restart-workers: (_running "queue")
+    docker compose restart queue scheduler
+
 # Run Composer in the php container
 [group('php')]
 composer *args: (_running "php")
