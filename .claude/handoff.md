@@ -3,7 +3,7 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-11-06.
+Última atualização: 2026-11-09.
 
 ## Onde paramos
 
@@ -18,8 +18,8 @@ sessão atualiza este arquivo; quem começar lê este arquivo primeiro.
 - **Etapa 4 dividida em dois planos.** 4a (alerta, local): `.claude/plans/etapa-4a-alerta.md`,
   **concluído: as 5 etapas confirmadas em 2026-11-06** (e-mail conferido no Mailpit). Falta, com
   o dev: PR para a `main` e marcar as tarefas no cronograma. 4b (MVP no ar):
-  `.claude/plans/etapa-4b-mvp-no-ar.md`, conferido e aprovado em 2026-11-06, nenhuma etapa
-  iniciada; tem 5 pontos em "Decidir com o dev", perguntados antes da etapa que depende de cada um.
+  `.claude/plans/etapa-4b-mvp-no-ar.md`, conferido e aprovado em 2026-11-06; etapa 1 entregue
+  em 2026-11-09, aguardando conferência; tem 5 pontos em "Decidir com o dev", perguntados antes da etapa que depende de cada um.
 - **Ideias em aberto (não decididas):** `Http::preventStrayRequests()` para todos os testes em
   `tests/Pest.php`; `LOG_CHANNEL=null` no `phpunit.xml` para os testes não gravarem em
   `storage/logs`.

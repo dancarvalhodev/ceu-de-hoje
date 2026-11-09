@@ -142,7 +142,7 @@ Ao fim de cada etapa, o dev faz commit.
 
 ## Progresso
 
-- [ ] 1. Estudar e documentar o deploy
+- [ ] 1. Estudar e documentar o deploy — entregue, aguardando conferência
 - [ ] 2. Imagem `php` de produção
 - [ ] 3. Imagem `caddy` de produção
 - [ ] 4. `compose.prod.yaml`
