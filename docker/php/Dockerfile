@@ -1,6 +1,8 @@
-FROM ubuntu:24.04
-
 ARG PHP_VERSION=8.5
+
+FROM ubuntu:24.04 AS base
+
+ARG PHP_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,10 +20,25 @@ RUN apt-get update \
         php${PHP_VERSION}-mysql \
         php${PHP_VERSION}-redis \
         php${PHP_VERSION}-sqlite3 \
-        php${PHP_VERSION}-xdebug \
         php${PHP_VERSION}-xml \
         php${PHP_VERSION}-zip \
     && ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/local/sbin/php-fpm \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+COPY docker/php/fpm-pool.conf /etc/php/${PHP_VERSION}/fpm/pool.d/zz-docker.conf
+
+WORKDIR /var/www/html
+
+CMD ["php-fpm"]
+
+
+FROM base AS dev
+
+ARG PHP_VERSION
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug \
     && rm -rf /var/lib/apt/lists/*
 
 # The fpm workers and the just recipes run as www-data. Giving it the host user's ids makes the
@@ -34,9 +51,28 @@ RUN userdel --remove ubuntu 2>/dev/null || true \
     && usermod --non-unique --uid ${HOST_UID} --gid ${HOST_GID} www-data \
     && install -d -o www-data -g www-data /var/www
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-COPY fpm-pool.conf /etc/php/${PHP_VERSION}/fpm/pool.d/zz-docker.conf
 
-WORKDIR /var/www/html
+FROM node:24-alpine AS assets
 
-CMD ["php-fpm"]
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY vite.config.js ./
+COPY resources ./resources
+RUN npm run build
+
+
+FROM base AS prod
+
+ARG PHP_VERSION
+
+COPY docker/php/php.prod.ini /etc/php/${PHP_VERSION}/fpm/conf.d/99-ceu-de-hoje.ini
+COPY docker/php/php.prod.ini /etc/php/${PHP_VERSION}/cli/conf.d/99-ceu-de-hoje.ini
+
+COPY . .
+COPY --from=assets /app/public/build ./public/build
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress \
+    && chown -R www-data:www-data storage bootstrap/cache

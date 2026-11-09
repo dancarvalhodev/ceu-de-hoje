@@ -142,8 +142,8 @@ Ao fim de cada etapa, o dev faz commit.
 
 ## Progresso
 
-- [ ] 1. Estudar e documentar o deploy — entregue, aguardando conferência
-- [ ] 2. Imagem `php` de produção
+- [x] 1. Estudar e documentar o deploy — confirmada em 2026-11-09
+- [ ] 2. Imagem `php` de produção — entregue, aguardando conferência
 - [ ] 3. Imagem `caddy` de produção
 - [ ] 4. `compose.prod.yaml`
 - [ ] 5. Laravel em produção
