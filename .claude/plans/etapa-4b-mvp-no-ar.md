@@ -63,6 +63,7 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
 3. **Bloco novo no Caddyfile do edge** para o subdomínio `ceudehoje.`.
 4. **E-mail com Resend** (driver nativo do Laravel), verificando o domínio.
 5. **Antes do deploy:** budget alert de US$ 1 na Oracle (conta pay-as-you-go).
+6. **Alias na rede `edge`:** nome fixo `ceu-de-hoje` (decidido em 2026-11-10, etapa 4).
 
 ## Decidir com o dev
 
@@ -145,7 +146,7 @@ Ao fim de cada etapa, o dev faz commit.
 - [x] 1. Estudar e documentar o deploy — confirmada em 2026-11-09
 - [x] 2. Imagem `php` de produção — confirmada em 2026-11-09
 - [x] 3. Imagem `caddy` de produção — confirmada em 2026-11-10
-- [ ] 4. `compose.prod.yaml`
+- [ ] 4. `compose.prod.yaml` — entregue, aguardando conferência
 - [ ] 5. Laravel em produção
 - [ ] 6. Workflow de deploy
 - [ ] 7. Roteiro do servidor e primeiro deploy

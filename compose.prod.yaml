@@ -1,0 +1,111 @@
+x-logging: &logging
+    driver: json-file
+    options:
+        max-size: 10m
+        max-file: "3"
+
+services:
+    caddy:
+        image: ghcr.io/dancarvalhodev/ceu-de-hoje-caddy:${IMAGE_TAG:-latest}
+        build:
+            context: .
+            dockerfile: docker/caddy/Dockerfile
+            additional_contexts:
+                app: service:php
+        restart: unless-stopped
+        depends_on:
+            php:
+                condition: service_started
+        networks:
+            default:
+            edge:
+                aliases:
+                    - ceu-de-hoje
+        healthcheck:
+            # /up is Laravel's health route, so this also checks php-fpm behind Caddy
+            test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/up"]
+            interval: 10s
+            timeout: 5s
+            retries: 6
+        logging: *logging
+
+    php:
+        image: ghcr.io/dancarvalhodev/ceu-de-hoje-php:${IMAGE_TAG:-latest}
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            target: prod
+        restart: unless-stopped
+        env_file: .env
+        # The fpm master runs as root, but the cache files must belong to the www-data workers
+        command: sh -c "runuser -u www-data -- php artisan optimize && exec php-fpm"
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        logging: *logging
+
+    queue:
+        image: ghcr.io/dancarvalhodev/ceu-de-hoje-php:${IMAGE_TAG:-latest}
+        restart: unless-stopped
+        env_file: .env
+        user: www-data
+        command: sh -c "php artisan optimize && exec php artisan queue:work"
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        logging: *logging
+
+    scheduler:
+        image: ghcr.io/dancarvalhodev/ceu-de-hoje-php:${IMAGE_TAG:-latest}
+        restart: unless-stopped
+        env_file: .env
+        user: www-data
+        command: sh -c "php artisan optimize && exec php artisan schedule:work"
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        logging: *logging
+
+    mysql:
+        image: mysql:8.4
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+        volumes:
+            - mysql-data:/var/lib/mysql
+        healthcheck:
+            # TCP, not the socket: during first-run init MySQL listens only on the socket
+            test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+        logging: *logging
+
+    redis:
+        image: redis:8.4-alpine
+        restart: unless-stopped
+        volumes:
+            - redis-data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        logging: *logging
+
+networks:
+    edge:
+        external: true
+
+volumes:
+    mysql-data:
+    redis-data:

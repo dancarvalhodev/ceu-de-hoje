@@ -24,8 +24,11 @@ push na master → deploy.yml
 ```
 
 - **Projeto separado na VM:** `-p ceu-prod` em `/srv/ceu-de-hoje`, com `caddy`, `php`, `queue`,
-  `scheduler`, `mysql` e `redis`. Só o `caddy` entra na rede `edge`, com um alias que o Caddyfile
-  do edge usa (`reverse_proxy <alias>:80`).
+  `scheduler`, `mysql` e `redis`. Só o `caddy` entra na rede `edge`, com o alias `ceu-de-hoje`
+  que o Caddyfile do edge usa (`reverse_proxy ceu-de-hoje:80`).
+- **Subida de cada container PHP:** `php artisan optimize` e depois o processo (fpm, `queue:work`
+  ou `schedule:work`). Cada container tem o próprio sistema de arquivos, então cada um gera o seu
+  cache. O healthcheck do `caddy` chama `/up` (rota de saúde do Laravel), que testa o PHP junto.
 - **Dev × produção** (Dockerfile multi-stage, alvos `dev` e `prod`):
 
   | | Dev | Produção |
