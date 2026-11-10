@@ -133,33 +133,30 @@ anteriores.
 
 ## 5. Entregar a etapa
 
-Ao terminar, encerre o turno com um relatório **direto e pequeno**: cabe numa tela, um item por
-linha, sem repetir o que o diff já mostra. Omita qualquer seção vazia. O detalhe fica para quando
-o dev perguntar.
+Ao terminar, **não faça resumo do que foi feito**: o dev confere pelo diff. Encerre o turno só
+com o título e a pergunta. Acrescente uma seção apenas quando ela tiver algo que ele precisa saber:
+
+- **Laravel:** só quando a etapa usou um recurso do Laravel que ele ainda não viu neste projeto
+  (1 a 3 frases: analogia + a mágica, com link da documentação).
+- **Conferir:** só quando há algo que ele precisa conferir obrigatoriamente (um comando para rodar,
+  um teste manual no navegador, um passo fora do repositório), com o resultado esperado.
+- **Não verificado ou com falha:** sempre que um teste, o Larastan ou o Pint falhou ou não pôde
+  rodar. Isso nunca é omitido.
 
 ```
 **Etapa N de T — <título>: concluída**
 
-Feito:
-- <arquivo ou comando make:* — o que faz, em poucas palavras>
-
 Laravel:
-<1 a 3 frases: analogia + a mágica nova, com link da documentação>
-
-Fora do plano:
-- <desvio e por quê>
-
-Verificado:
-- <comando — resultado>; não verificado: <o quê e por quê>
+<só se houver recurso novo>
 
 Conferir:
-<comando e resultado esperado>
+<só se for obrigatório>
 
 Está tudo correto? Posso seguir para a etapa N+1 — <título>?
 ```
 
 Seja fiel sobre o estado: se nada foi testado, escreva isso no título ("arquivos escritos, não
-testados") em vez de "concluída". O dev decide com base nesse relatório.
+testados") em vez de "concluída".
 
 `.claude/arch-explain/` tem um documento enxuto por assunto (ex.: `auth.md`, `authorization.md`,
 `validation.md`, `testing.md`, `ci.md`), no formato: o que é, analogia, como funciona aqui,

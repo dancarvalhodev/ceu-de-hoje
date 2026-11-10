@@ -1,0 +1,82 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  tests:
+    uses: ./.github/workflows/ci.yml
+
+  images:
+    needs: tests
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # compose.prod.yaml requires an env_file; the real one lives only on the server
+      - name: Empty .env for Compose
+        run: touch .env
+
+      - name: Build
+        run: docker compose -f compose.prod.yaml build
+
+      - name: Push
+        run: docker compose -f compose.prod.yaml push php caddy
+
+  publish:
+    needs: images
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Copy compose.prod.yaml
+        run: scp compose.prod.yaml "$SSH_HOST:/srv/ceu-de-hoje/compose.prod.yaml"
+
+      - name: Pull, migrate and start
+        run: |
+          # shellcheck disable=SC2029 # IMAGE_TAG must expand here, on the runner
+          ssh "$SSH_HOST" "IMAGE_TAG=$IMAGE_TAG bash -s" <<'EOF'
+          set -euo pipefail
+          cd /srv/ceu-de-hoje
+          docker compose -p ceu-prod -f compose.prod.yaml pull php caddy
+          docker compose -p ceu-prod -f compose.prod.yaml run --rm php php artisan migrate --force
+          docker compose -p ceu-prod -f compose.prod.yaml up -d --no-build --wait
+          docker image prune -af --filter "until=168h"
+          EOF

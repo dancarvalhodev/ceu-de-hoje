@@ -68,6 +68,10 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
    `alerta@ceudehoje.danielcarvalho.dev` (decidido em 2026-11-10, etapa 5).
 8. **`trusted_proxies` no Caddyfile do app** (fora do plano original, aprovado em 2026-11-10,
    etapa 5): sem isso, o caddy do app troca o `X-Forwarded-Proto: https` do edge por `http`.
+9. **Migrações automáticas** no `deploy.yml`, antes do `up` (2026-11-10, etapa 6).
+10. **Imagens públicas no GHCR**, sem `docker login` na VM (2026-11-10, etapa 6).
+11. **CI sem duplicar na `master`:** o `ci.yml` ignora push na `master`; lá os testes rodam só
+    dentro do `deploy.yml` (fora do plano original, 2026-11-10, etapa 6).
 
 ## Decidir com o dev
 
@@ -153,6 +157,6 @@ Ao fim de cada etapa, o dev faz commit.
 - [x] 2. Imagem `php` de produção — confirmada em 2026-11-09
 - [x] 3. Imagem `caddy` de produção — confirmada em 2026-11-10
 - [x] 4. `compose.prod.yaml` — confirmada em 2026-11-10
-- [ ] 5. Laravel em produção — entregue, aguardando conferência
-- [ ] 6. Workflow de deploy
+- [x] 5. Laravel em produção — confirmada em 2026-11-10
+- [ ] 6. Workflow de deploy — entregue, aguardando conferência
 - [ ] 7. Roteiro do servidor e primeiro deploy

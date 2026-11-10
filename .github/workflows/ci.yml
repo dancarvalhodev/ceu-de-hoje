@@ -2,7 +2,10 @@ name: CI
 
 on:
   push:
+    # On master the tests run inside deploy.yml
+    branches-ignore: [master]
   pull_request:
+  workflow_call:
 
 jobs:
   tests:
