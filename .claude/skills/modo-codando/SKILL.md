@@ -42,13 +42,11 @@ quem precisa concordar com ela.
 
 Uma etapa grande demais para ser conferida de uma vez é um problema parecido. Proponha
 dividi-la em subetapas (5a, 5b, 5c...) antes de começar, perguntando ao dev como ele prefere
-dividir. **Registre a divisão no plano e no `.claude/handoff.md` antes de escrever qualquer
-arquivo da etapa.** Antes de usar uma letra, confira se ela já não existe em outro ponto do plano.
+dividir. **Registre a divisão no plano antes de escrever qualquer arquivo da etapa.** Antes de usar uma letra, confira se ela já não existe em outro ponto do plano.
 
 ## 3. Antes da primeira etapa
 
-Leia o `.claude/handoff.md` (onde o trabalho parou e como o dev quer trabalhar), o
-`docs/PROJETO.md` e o plano inteiro. Diga, em poucas linhas, quantas etapas há e qual será
+Leia o `docs/PROJETO.md` e o plano inteiro. Diga, em poucas linhas, quantas etapas há e qual será
 executada agora.
 
 **Questione a etapa quando ela não valer o custo.** Se a próxima etapa for cara e trouxer pouco
@@ -199,10 +197,8 @@ outra sessão consiga retomar de onde esta parou:
 - [ ] 3. `.env.example` e `justfile`
 ```
 
-Marque `[x]` só depois da confirmação do dev, nunca ao terminar de escrever o código.
-
-Ao fim da sessão, atualize também o `.claude/handoff.md` (onde paramos, pendências e decisões
-novas), para que o trabalho possa continuar em outro computador.
+Marque `[x]` só depois da confirmação do dev, nunca ao terminar de escrever o código. Uma
+decisão nova tomada durante a execução entra na seção "Decisões do dev" do plano.
 
 ## 8. Fim do plano
 

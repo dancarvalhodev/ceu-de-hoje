@@ -46,6 +46,11 @@ O Dan tem cinco anos de PHP (puro e Laminas) e trabalha com PHP + MySQL + Redis 
 - **Código em inglês, interface em português.** Classes, métodos, tabelas, rotas e commits em
   inglês. Textos de tela, mensagens de validação e e-mails em português. Documentação e conversa em
   português.
+- **Git é do dev.** Nunca rode `git add`, `commit`, `push` ou `stash`, nem abra PR. Quando ele
+  pedir, escreva só a mensagem de commit (regras na skill `modo-codando`).
+- **Apagar arquivos é com o dev:** liste o `! rm ...` para ele rodar.
+- **O `.env` é do dev:** não leia nem edite sem permissão explícita. Também não crie dados reais
+  no banco de dev sem avisar.
 
 ## Comandos
 
@@ -74,8 +79,8 @@ uma migração que já rodou.
 ## Antes de mexer no código
 
 - Convenções: @rules/code-style.md
-- Onde paramos, decisões e como o dev quer trabalhar: `.claude/handoff.md`.
-- Plano da etapa atual: `.claude/plans/`. Para executar, use a skill `modo-codando`.
+- Plano da etapa atual: `.claude/plans/`. As decisões de cada etapa ficam na seção "Decisões do
+  dev" do plano, e onde paramos, na seção "Progresso". Para executar, use a skill `modo-codando`.
 - Como cada parte funciona: `.claude/arch-explain/`, um arquivo por assunto. Leia o do assunto
   antes de mexer nele.
 

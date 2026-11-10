@@ -47,7 +47,8 @@ Cada etapa ganha seu plano em `.claude/plans/` quando chegar a vez dela.
 ## Regras de negócio
 
 - **Local:** nome, latitude (-90 a 90), longitude (-180 a 180) e fuso horário (identificador IANA,
-  ex.: `America/Sao_Paulo`). Pertence a um usuário; ninguém vê nem altera o local de outro.
+  ex.: `America/Sao_Paulo`, o padrão no cadastro). Um usuário pode ter vários locais; ninguém vê
+  nem altera o local de outro.
 - **Pontuação de observabilidade (etapa 3):** de 0 a 10, combina a cobertura de nuvens no momento
   da consulta com a iluminação da lua. Fórmula no plano da etapa 3 e em
   `.claude/arch-explain/sky-score.md`.

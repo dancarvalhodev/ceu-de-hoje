@@ -71,8 +71,8 @@ Perguntar antes da etapa que depende de cada uma.
 1. **Domínio completo** (`ceudehoje.<qual domínio>`) e **remetente** do e-mail (ex.:
    `alerta@ceudehoje.<domínio>`). Etapas 5 e 7.
 2. **Alias na rede `edge`.** Recomendação: um nome fixo (`ceu-de-hoje`) em vez de
-   `${COMPOSE_PROJECT_NAME}`, o que dispensa a dúvida, registrada no handoff, sobre de onde vem essa
-   variável no `landing-page`. Etapa 4.
+   `${COMPOSE_PROJECT_NAME}`, o que dispensa a dúvida sobre de onde vem essa variável no
+   `landing-page` (o alias `site-prod` depende dela). Etapa 4.
 3. **Migrações automáticas no deploy.** Recomendação: sim, como um passo do `deploy.yml`
    (`docker compose run --rm php php artisan migrate --force`) antes do `up`. A alternativa é
    rodar à mão a cada deploy. Etapa 6.
@@ -143,8 +143,8 @@ Ao fim de cada etapa, o dev faz commit.
 ## Progresso
 
 - [x] 1. Estudar e documentar o deploy — confirmada em 2026-11-09
-- [ ] 2. Imagem `php` de produção — entregue, aguardando conferência
-- [ ] 3. Imagem `caddy` de produção
+- [x] 2. Imagem `php` de produção — confirmada em 2026-11-09
+- [ ] 3. Imagem `caddy` de produção — entregue, aguardando conferência
 - [ ] 4. `compose.prod.yaml`
 - [ ] 5. Laravel em produção
 - [ ] 6. Workflow de deploy

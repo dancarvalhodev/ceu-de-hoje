@@ -57,7 +57,8 @@ Um **restaurante**. O Caddy é o **garçom**: entrega na hora o que já está pr
   `client_host = host.docker.internal` é o certo no Docker Desktop do Mac.
 - **Upload público:** o Caddy monta só `public/`. Se um dia houver `storage:link`, monte o projeto
   inteiro no Caddy, senão o link `public/storage` aponta para o vazio.
-- **`queue` e `scheduler`** ainda não existem; entram na etapa 4 do cronograma, com o primeiro Job.
+- **Mudou um Job ou o agendamento?** `just restart-workers` (detalhes em `queues-and-mail.md`).
+- **Mac M1 (ARM):** só use imagens com versão ARM; se alguma não tiver, avise antes de trocar.
 
 ## Comandos úteis
 

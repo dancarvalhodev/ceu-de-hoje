@@ -31,6 +31,11 @@ classe por trás.
 - **SQLite não é MySQL.** Diferenças pequenas (tipos, `ALTER`) podem aparecer; até aqui não
   importam para o CRUD do projeto.
 
+## Ideias em aberto (não decididas)
+
+- `Http::preventStrayRequests()` para todos os testes, em `tests/Pest.php`.
+- `LOG_CHANNEL=null` no `phpunit.xml`, para os testes não gravarem em `storage/logs`.
+
 ## Comandos úteis
 
 ```bash
