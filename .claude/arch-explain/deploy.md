@@ -54,6 +54,9 @@ push na master → deploy.yml
 ## Pegadinhas
 
 - **`env()` fora de `config/` devolve `null`** com a config em cache. Use `config()`.
+- **Dois proxies na frente do PHP** (edge → caddy do app). O caddy do app só repassa o
+  `X-Forwarded-Proto` do edge por causa do `trusted_proxies` no Caddyfile. Sem ele, o
+  `trustProxies` do Laravel recebe `http`.
 - **Trocar a `APP_KEY` desloga todo mundo.** Gere uma vez e guarde.
 - **Mudou o `.env` do servidor?** Recrie os containers (`up -d --force-recreate`).
 - **Rollback não desfaz migração.** A imagem volta, o banco não.

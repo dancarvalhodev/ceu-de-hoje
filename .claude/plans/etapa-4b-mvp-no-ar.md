@@ -64,6 +64,10 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
 4. **E-mail com Resend** (driver nativo do Laravel), verificando o domínio.
 5. **Antes do deploy:** budget alert de US$ 1 na Oracle (conta pay-as-you-go).
 6. **Alias na rede `edge`:** nome fixo `ceu-de-hoje` (decidido em 2026-11-10, etapa 4).
+7. **Domínio e remetente:** `ceudehoje.danielcarvalho.dev`, e-mails de
+   `alerta@ceudehoje.danielcarvalho.dev` (decidido em 2026-11-10, etapa 5).
+8. **`trusted_proxies` no Caddyfile do app** (fora do plano original, aprovado em 2026-11-10,
+   etapa 5): sem isso, o caddy do app troca o `X-Forwarded-Proto: https` do edge por `http`.
 
 ## Decidir com o dev
 
@@ -123,7 +127,9 @@ Perguntar antes da etapa que depende de cada uma.
 7. **Roteiro do servidor e primeiro deploy.** `docs/deploy.md` com o passo a passo para o dev:
    - budget alert de US$ 1 na Oracle;
    - registro DNS do subdomínio;
-   - domínio e chave no Resend;
+   - domínio e chave no Resend, com o passo a passo dos registros DNS (MX, SPF, DKIM e,
+     opcionalmente, DMARC) na Squarespace: campos Host/Tipo/Prioridade/Dados e a regra de tirar o
+     `.danielcarvalho.dev` do nome (pedido do dev em 2026-11-10);
    - `/srv/ceu-de-hoje/.env` com `APP_KEY` nova;
    - bloco no Caddyfile do edge (repositório `landing-page`) e reinício do edge;
    - secrets do repositório;
@@ -146,7 +152,7 @@ Ao fim de cada etapa, o dev faz commit.
 - [x] 1. Estudar e documentar o deploy — confirmada em 2026-11-09
 - [x] 2. Imagem `php` de produção — confirmada em 2026-11-09
 - [x] 3. Imagem `caddy` de produção — confirmada em 2026-11-10
-- [ ] 4. `compose.prod.yaml` — entregue, aguardando conferência
-- [ ] 5. Laravel em produção
+- [x] 4. `compose.prod.yaml` — confirmada em 2026-11-10
+- [ ] 5. Laravel em produção — entregue, aguardando conferência
 - [ ] 6. Workflow de deploy
 - [ ] 7. Roteiro do servidor e primeiro deploy

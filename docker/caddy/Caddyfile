@@ -1,3 +1,10 @@
+# Keep the edge proxy's X-Forwarded-* headers (it reaches us from a private Docker network)
+{
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
 :80 {
 	root * /var/www/html/public
 
