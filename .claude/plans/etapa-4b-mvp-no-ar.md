@@ -4,10 +4,11 @@ Plano conferido e aprovado pelo dev em 2026-11-06.
 
 ## Objetivo
 
-Publicar o app na VM ARM da Oracle que já roda o `landing-page`, no mesmo modelo dele: imagens ARM
-no GHCR, deploy por `ssh` + `docker compose` a cada push na `master`, e o Caddy "edge" (que já
-existe na VM) encaminhando o subdomínio para o app. O alerta das 20h passa a sair por e-mail de
-verdade, pelo Resend.
+Publicar o app numa VM ARM "Always Free" da Oracle só dele, no modelo de deploy do `landing-page`:
+imagens ARM no GHCR e deploy por `ssh` + `docker compose` a cada push na `master`. O Caddy do
+próprio app atende as portas 80/443, com HTTPS automático (sem o "edge" do `landing-page`;
+revisado em 2026-11-11, ver decisão 12). O alerta das 20h passa a sair por e-mail de verdade,
+pelo Resend.
 
 Pronto quando: um push na `master` passa no CI, gera as imagens, publica na VM e roda as
 migrações; o app abre em HTTPS no subdomínio; o worker e o scheduler estão de pé; um e-mail de
@@ -36,8 +37,13 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
 - **Dockerfiles multi-stage** com alvos `dev` e `prod`. O `prod` copia o código para dentro da
   imagem e roda `composer install --no-dev`. O Caddy de `prod` leva o próprio Caddyfile e o
   `public/`.
-- **Edge** (`infra/edge/` do `landing-page`): Caddy com as portas 80/443, HTTPS automático, rede
-  `edge`, `reverse_proxy site-prod:80` para o domínio. Atualizado à mão no servidor, fora do CI.
+- **VM** (`infra/README.md` e `infra/cloud-init.yaml` do `landing-page`): Ubuntu 24.04 em
+  `VM.Standard.A1.Flex`, cloud-init que instala o Docker, cria o usuário `deploy` (só chave SSH,
+  grupo `docker`), libera 80/443 no iptables e cria a pasta em `/srv`. As portas também são
+  abertas na Security List da Oracle.
+- **Edge** (`infra/edge/` do `landing-page`): Caddy com as portas 80/443 na frente de vários
+  sites. **Não usado aqui** desde a decisão 12: com a VM só para o app, o Caddy do app faz esse
+  papel.
 - **Rollback:** rodar de novo o `up` com o `IMAGE_TAG` de um commit anterior.
 
 ## O que muda por ser Laravel
@@ -47,48 +53,46 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
 - **Migrações:** `php artisan migrate --force` a cada deploy (o `--force` é exigido em produção).
 - **Caches de produção:** `php artisan optimize` (config, rotas, views e eventos em cache) ao subir
   o container. Pegadinha: com a config em cache, `env()` fora de `config/` devolve `null`.
-- **HTTPS atrás de proxy:** o edge termina o TLS e fala HTTP com o app. Sem confiar no proxy
-  (`trustProxies` em `bootstrap/app.php`), o Laravel gera links `http://`, inclusive o do e-mail.
+- **HTTPS:** o Caddy do app termina o TLS e fala FastCGI com o PHP mandando `HTTPS=on`; o
+  Laravel enxerga `https` sem `trustProxies`. Links do e-mail vêm do `APP_URL`.
 - **Mais serviços:** `queue`, `scheduler`, `mysql` e `redis` com volumes próprios, sem portas no
-  host, num projeto Compose separado (`-p ceu-prod`, `/srv/ceu-de-hoje`).
+  host, no projeto Compose `-p ceu-prod`, em `/srv/ceu-de-hoje`.
 - **Segredos no servidor:** `/srv/ceu-de-hoje/.env` criado à mão (`APP_KEY`, senhas do banco,
   `RESEND_API_KEY`), nunca no repositório nem no CI.
 - **Logs:** `LOG_CHANNEL=stderr` em produção, para o `docker compose logs` mostrar tudo.
 
 ## Decisões do dev (já tomadas)
 
-1. **Oracle Cloud**, na VM ARM do `landing-page`, mesmo modelo de deploy.
-2. **Projeto Compose separado** (`-p ceu-prod`, `/srv/ceu-de-hoje`), MySQL e Redis próprios, sem
-   portas no host.
-3. **Bloco novo no Caddyfile do edge** para o subdomínio `ceudehoje.`.
+1. **Oracle Cloud**, mesmo modelo de deploy do `landing-page`. ~~Na VM dele~~: VM própria desde a
+   decisão 12.
+2. **Projeto Compose** `-p ceu-prod` em `/srv/ceu-de-hoje`, MySQL e Redis próprios, sem portas no
+   host.
+3. ~~Bloco novo no Caddyfile do edge~~ (substituída pela decisão 12).
 4. **E-mail com Resend** (driver nativo do Laravel), verificando o domínio.
 5. **Antes do deploy:** budget alert de US$ 1 na Oracle (conta pay-as-you-go).
-6. **Alias na rede `edge`:** nome fixo `ceu-de-hoje` (decidido em 2026-11-10, etapa 4).
+6. ~~Alias na rede `edge`~~ (2026-11-10, etapa 4; removido pela decisão 12).
 7. **Domínio e remetente:** `ceudehoje.danielcarvalho.dev`, e-mails de
    `alerta@ceudehoje.danielcarvalho.dev` (decidido em 2026-11-10, etapa 5).
-8. **`trusted_proxies` no Caddyfile do app** (fora do plano original, aprovado em 2026-11-10,
-   etapa 5): sem isso, o caddy do app troca o `X-Forwarded-Proto: https` do edge por `http`.
+8. ~~`trusted_proxies` no Caddyfile do app e `trustProxies` no Laravel~~ (2026-11-10, etapa 5;
+   removidos pela decisão 12: sem proxy na frente, confiar em `*` deixaria forjar
+   `X-Forwarded-*`).
 9. **Migrações automáticas** no `deploy.yml`, antes do `up` (2026-11-10, etapa 6).
 10. **Imagens públicas no GHCR**, sem `docker login` na VM (2026-11-10, etapa 6).
 11. **CI sem duplicar na `master`:** o `ci.yml` ignora push na `master`; lá os testes rodam só
     dentro do `deploy.yml` (fora do plano original, 2026-11-10, etapa 6).
+12. **VM "Always Free" só para o app, sem edge** (2026-11-11, durante a etapa 6): o compartilhamento
+    com o `landing-page` complicava sem ganho. O `caddy` do app publica 80/443 e faz o HTTPS
+    (`SITE_ADDRESS` no Caddyfile, volumes `caddy-data`/`caddy-config`); a VM nasce de
+    `infra/cloud-init.yaml` (cópia do `landing-page`, sem a rede `edge`); o Actions entra como
+    `deploy@`. Cabe no Always Free junto com a VM do `landing-page` (limite de 4 OCPUs e 24 GB
+    somando as duas).
 
 ## Decidir com o dev
 
-Perguntar antes da etapa que depende de cada uma.
+Perguntar antes da etapa que depende de cada uma. (Domínio, alias, migrações e imagens públicas já
+viraram as decisões 6, 7, 9 e 10.)
 
-1. **Domínio completo** (`ceudehoje.<qual domínio>`) e **remetente** do e-mail (ex.:
-   `alerta@ceudehoje.<domínio>`). Etapas 5 e 7.
-2. **Alias na rede `edge`.** Recomendação: um nome fixo (`ceu-de-hoje`) em vez de
-   `${COMPOSE_PROJECT_NAME}`, o que dispensa a dúvida sobre de onde vem essa variável no
-   `landing-page` (o alias `site-prod` depende dela). Etapa 4.
-3. **Migrações automáticas no deploy.** Recomendação: sim, como um passo do `deploy.yml`
-   (`docker compose run --rm php php artisan migrate --force`) antes do `up`. A alternativa é
-   rodar à mão a cada deploy. Etapa 6.
-4. **Imagens públicas no GHCR**, como no `landing-page`. Recomendação: sim; elas não levam
-   segredos (o `.env` fica no servidor). A alternativa é um `docker login` no servidor com um token
-   de leitura. Etapa 6.
-5. **Cadastro aberto em produção.** Qualquer pessoa pode se registrar e receber e-mails (no plano
+1. **Cadastro aberto em produção.** Qualquer pessoa pode se registrar e receber e-mails (no plano
    grátis do Resend: 100 por dia, 3.000 por mês). Recomendação: deixar aberto; é um portfólio e o
    volume será baixo. Etapa 7.
 
@@ -96,8 +100,8 @@ Perguntar antes da etapa que depende de cada uma.
 
 - MVP: só o que está listado. Nada de Kubernetes, Ansible, painel ou monitoramento.
 - Nada de segredo no repositório. Variáveis novas vão para o `.env.example`, sem valores reais.
-- O que acontece fora deste repositório (Oracle, DNS, Resend, Caddyfile do edge, secrets do
-  GitHub) é feito pelo dev, seguindo o roteiro da etapa 7.
+- O que acontece fora deste repositório (Oracle, DNS, Resend, secrets do GitHub) é feito pelo
+  dev, seguindo o roteiro da etapa 7.
 
 ## Etapas de implementação
 
@@ -124,19 +128,27 @@ Perguntar antes da etapa que depende de cada uma.
    (`composer require resend/resend-php`, `MAIL_MAILER=resend`, `RESEND_API_KEY`); variáveis de
    produção no `.env.example`, comentadas. Teste: uma requisição com `X-Forwarded-Proto: https`
    gera links `https://`.
-6. **Workflow de deploy.** `ci.yml` ganha `workflow_call`. `deploy.yml` novo, no modelo do
-   `landing-page`: CI → imagens ARM no GHCR → `scp` do `compose.prod.yaml` → `pull`, migrações
-   (decisão 3) e `up -d --no-build --wait` com `-p ceu-prod` → `prune`. Conferência: `actionlint`
-   ou leitura do YAML; o primeiro push de verdade fica para a etapa 7.
-7. **Roteiro do servidor e primeiro deploy.** `docs/deploy.md` com o passo a passo para o dev:
-   - budget alert de US$ 1 na Oracle;
-   - registro DNS do subdomínio;
-   - domínio e chave no Resend, com o passo a passo dos registros DNS (MX, SPF, DKIM e,
-     opcionalmente, DMARC) na Squarespace: campos Host/Tipo/Prioridade/Dados e a regra de tirar o
-     `.danielcarvalho.dev` do nome (pedido do dev em 2026-11-10);
+6. **Workflow de deploy e VM própria.** `ci.yml` ganha `workflow_call`. `deploy.yml` novo, no
+   modelo do `landing-page`: CI → imagens ARM no GHCR → `scp` do `compose.prod.yaml` → `pull`,
+   migrações (decisão 9) e `up -d --no-build --wait` com `-p ceu-prod` → `prune`, tudo como
+   `deploy@`. Ajustes da decisão 12: `caddy` com portas 80/443 e HTTPS pelo `SITE_ADDRESS`, sem
+   rede `edge`; sem `trusted_proxies`/`trustProxies` (e sem `TrustProxiesTest`);
+   `infra/cloud-init.yaml`. Conferência: `docker compose -f compose.prod.yaml config -q`, leitura
+   do YAML e `just up` (dev igual); o primeiro push de verdade fica para a etapa 7.
+7. **Roteiro do servidor e primeiro deploy.** `docs/deploy.md`, no formato do `infra/README.md`
+   do `landing-page` (tabela de passos, um comando por vez, "Se algo não funcionar"). **Do zero,
+   sem reaproveitar nada da VM ou da rede do `landing-page`** (pedido do dev em 2026-11-11):
+   - conta Oracle (ou a existente), Pay As You Go opcional, budget alert de US$ 1 e os limites do
+     Always Free;
+   - chaves SSH (a pessoal para `ubuntu`, uma de deploy nova, `~/.ssh/ceu-deploy`);
+   - VCN própria pelo assistente e portas 80/443 (TCP) e 443 (UDP) na Security List;
+   - criar a VM ARM com o `infra/cloud-init.yaml` (troca da chave de deploy, "Out of capacity");
+     conferir a VM, com o plano B à mão se o cloud-init não for aplicado;
+   - **subdomínio e Resend já prontos** (dev, 2026-11-11): só editar o registro A `ceudehoje` na
+     Squarespace para o IP novo, sem mexer nos registros do Resend, e conferir com `dig`
+     **antes** do deploy; a chave do Resend só vai para o `.env`;
    - `/srv/ceu-de-hoje/.env` com `APP_KEY` nova;
-   - bloco no Caddyfile do edge (repositório `landing-page`) e reinício do edge;
-   - secrets do repositório;
+   - secrets do repositório (`SSH_HOST` = só o IP, `SSH_KEY`, `SSH_KNOWN_HOSTS`);
    - primeiro push e imagens públicas no GHCR;
    - conferência final e rollback.
 
@@ -158,5 +170,7 @@ Ao fim de cada etapa, o dev faz commit.
 - [x] 3. Imagem `caddy` de produção — confirmada em 2026-11-10
 - [x] 4. `compose.prod.yaml` — confirmada em 2026-11-10
 - [x] 5. Laravel em produção — confirmada em 2026-11-10
-- [ ] 6. Workflow de deploy — entregue, aguardando conferência
-- [ ] 7. Roteiro do servidor e primeiro deploy
+- [ ] 6. Workflow de deploy e VM própria — revisada em 2026-11-11 (decisão 12), aguardando
+  conferência
+- [ ] 7. Roteiro do servidor e primeiro deploy — `docs/deploy.md` escrito em 2026-11-11, aguardando
+  o dev executar

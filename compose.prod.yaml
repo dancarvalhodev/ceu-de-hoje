@@ -16,11 +16,16 @@ services:
         depends_on:
             php:
                 condition: service_started
-        networks:
-            default:
-            edge:
-                aliases:
-                    - ceu-de-hoje
+        environment:
+            SITE_ADDRESS: ceudehoje.danielcarvalho.dev
+        ports:
+            - 80:80
+            - 443:443
+            - 443:443/udp
+        volumes:
+            # TLS certificates; never delete them (Let's Encrypt limits issuance per week)
+            - caddy-data:/data
+            - caddy-config:/config
         healthcheck:
             # /up is Laravel's health route, so this also checks php-fpm behind Caddy
             test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/up"]
@@ -102,10 +107,8 @@ services:
             retries: 10
         logging: *logging
 
-networks:
-    edge:
-        external: true
-
 volumes:
+    caddy-data:
+    caddy-config:
     mysql-data:
     redis-data:

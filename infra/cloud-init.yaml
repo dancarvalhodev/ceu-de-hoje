@@ -1,0 +1,27 @@
+#cloud-config
+# ASCII only, no accents: the Oracle console corrupts other characters when pasting.
+# Paste in "Initialization script" when creating the VM; it runs only on the first boot.
+
+package_update: true
+package_upgrade: true
+
+groups:
+  - docker
+
+users:
+  - default
+  - name: deploy
+    groups: [docker]
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys:
+      - REPLACE_WITH_THE_DEPLOY_PUBLIC_KEY
+
+runcmd:
+  # Save the rules before installing Docker, so Docker's own rules stay out of the saved file.
+  - iptables -I INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+  - iptables -I INPUT -p udp --dport 443 -j ACCEPT
+  - netfilter-persistent save
+  - curl -fsSL https://get.docker.com | sh
+  - mkdir -p /srv/ceu-de-hoje
+  - chown deploy:deploy /srv/ceu-de-hoje

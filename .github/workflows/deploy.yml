@@ -67,12 +67,12 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
       - name: Copy compose.prod.yaml
-        run: scp compose.prod.yaml "$SSH_HOST:/srv/ceu-de-hoje/compose.prod.yaml"
+        run: scp compose.prod.yaml "deploy@$SSH_HOST:/srv/ceu-de-hoje/compose.prod.yaml"
 
       - name: Pull, migrate and start
         run: |
           # shellcheck disable=SC2029 # IMAGE_TAG must expand here, on the runner
-          ssh "$SSH_HOST" "IMAGE_TAG=$IMAGE_TAG bash -s" <<'EOF'
+          ssh "deploy@$SSH_HOST" "IMAGE_TAG=$IMAGE_TAG bash -s" <<'EOF'
           set -euo pipefail
           cd /srv/ceu-de-hoje
           docker compose -p ceu-prod -f compose.prod.yaml pull php caddy

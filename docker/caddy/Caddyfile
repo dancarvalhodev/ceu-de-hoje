@@ -1,11 +1,6 @@
-# Keep the edge proxy's X-Forwarded-* headers (it reaches us from a private Docker network)
-{
-	servers {
-		trusted_proxies static private_ranges
-	}
-}
-
-:80 {
+# SITE_ADDRESS: ":80" in dev; the domain in production, which turns on automatic HTTPS.
+# http://127.0.0.1 keeps plain HTTP for the container healthcheck in both.
+{$SITE_ADDRESS}, http://127.0.0.1 {
 	root * /var/www/html/public
 
 	log
