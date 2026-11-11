@@ -469,7 +469,7 @@ corrija (ou faça um `git revert`) e publique.
 | `publish` falha com `denied` ou `unauthorized` | Imagens ainda privadas no GHCR | Passo 14 |
 | `publish` falha com `Permission denied (publickey)` | `SSH_KEY` incompleto ou é a pública | Passo 12 |
 | `publish` falha com `Host key verification failed` | `SSH_KNOWN_HOSTS` não bate (VM recriada ou IP trocado) | Passos 11 e 12 |
-| `publish` falha no `migrate` com `Access denied` | Senha do MySQL mudou no `.env` depois da primeira subida | Passo 10 |
+| `publish` falha no `up --wait` e o `php` não fica de pé | A migração ou o `optimize` falhou na subida do `php` | `logs php`; com `Access denied`, a senha do MySQL mudou no `.env` depois da primeira subida (passo 10) |
 | Página 500 | Erro do Laravel | `logs php` (o log vai para `stderr`) |
 | Links do e-mail com `http://` ou `localhost` | `APP_URL` errado | Passo 10 e `up -d --force-recreate` |
 | E-mail não chega | Chave errada ou remetente fora do domínio verificado | Painel do Resend (**Emails**) e `logs queue` |

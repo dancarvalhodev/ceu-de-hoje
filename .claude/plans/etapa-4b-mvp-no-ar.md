@@ -76,7 +76,9 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
 8. ~~`trusted_proxies` no Caddyfile do app e `trustProxies` no Laravel~~ (2026-11-10, etapa 5;
    removidos pela decisão 12: sem proxy na frente, confiar em `*` deixaria forjar
    `X-Forwarded-*`).
-9. **Migrações automáticas** no `deploy.yml`, antes do `up` (2026-11-10, etapa 6).
+9. **Migrações automáticas** (2026-11-10, etapa 6). Desde 2026-11-11 rodam na subida do
+   container `php` (`migrate --force` antes do `optimize`), não mais num `run` separado do
+   `deploy.yml`: o deploy vira um `up` só e uma falha aparece em `logs php`.
 10. **Imagens públicas no GHCR**, sem `docker login` na VM (2026-11-10, etapa 6).
 11. **CI sem duplicar na `master`:** o `ci.yml` ignora push na `master`; lá os testes rodam só
     dentro do `deploy.yml` (fora do plano original, 2026-11-10, etapa 6).

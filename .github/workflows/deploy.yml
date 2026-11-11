@@ -69,14 +69,14 @@ jobs:
       - name: Copy compose.prod.yaml
         run: scp compose.prod.yaml "deploy@$SSH_HOST:/srv/ceu-de-hoje/compose.prod.yaml"
 
-      - name: Pull, migrate and start
+      # Migrations run when the php container starts (compose.prod.yaml)
+      - name: Pull and start
         run: |
           # shellcheck disable=SC2029 # IMAGE_TAG must expand here, on the runner
           ssh "deploy@$SSH_HOST" "IMAGE_TAG=$IMAGE_TAG bash -s" <<'EOF'
           set -euo pipefail
           cd /srv/ceu-de-hoje
           docker compose -p ceu-prod -f compose.prod.yaml pull php caddy
-          docker compose -p ceu-prod -f compose.prod.yaml run --rm php php artisan migrate --force
           docker compose -p ceu-prod -f compose.prod.yaml up -d --no-build --wait
           docker image prune -af --filter "until=168h"
           EOF

@@ -19,7 +19,7 @@ Actions é o caminhão que confere, leva e troca a vitrine. A VM é uma loja de 
 push na master → deploy.yml
   ├─ testes   → ci.yml (Pint, Larastan, Pest)
   ├─ imagens  → runner ARM, build alvo prod, push: ghcr.io/dancarvalhodev/ceu-de-hoje-{php,caddy}:<sha>
-  └─ publicar → scp do compose.prod.yaml; ssh deploy@VM: pull, migrate --force, up -d --wait, prune
+  └─ publicar → scp do compose.prod.yaml; ssh deploy@VM: pull, up -d --wait, prune
 
 internet → caddy (80/443, HTTPS automático) → php-fpm
 ```
@@ -33,7 +33,8 @@ internet → caddy (80/443, HTTPS automático) → php-fpm
   certificado na Let's Encrypt sozinho. O `http://127.0.0.1` extra é para o healthcheck, que
   chama `/up` (rota de saúde do Laravel) e assim testa o PHP junto.
 - **Subida de cada container PHP:** `php artisan optimize` e depois o processo (fpm, `queue:work`
-  ou `schedule:work`). Cada container tem o próprio sistema de arquivos, então cada um gera o seu
+  ou `schedule:work`). Só o `php` roda antes o `migrate --force`; se a migração falhar, ele não
+  sobe, o `up --wait` falha e o erro fica em `logs php`. Cada container tem o próprio sistema de arquivos, então cada um gera o seu
   cache.
 - **Dev × produção** (Dockerfile multi-stage, alvos `dev` e `prod`):
 

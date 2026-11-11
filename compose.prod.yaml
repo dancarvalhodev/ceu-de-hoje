@@ -43,7 +43,7 @@ services:
         restart: unless-stopped
         env_file: .env
         # The fpm master runs as root, but the cache files must belong to the www-data workers
-        command: sh -c "runuser -u www-data -- php artisan optimize && exec php-fpm"
+        command: sh -c "runuser -u www-data -- php artisan migrate --force && runuser -u www-data -- php artisan optimize && exec php-fpm"
         depends_on:
             mysql:
                 condition: service_healthy
