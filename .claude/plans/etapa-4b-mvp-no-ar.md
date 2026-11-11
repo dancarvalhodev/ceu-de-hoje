@@ -88,15 +88,14 @@ teste chega numa caixa real; Pint, Larastan e Pest verdes.
     `infra/cloud-init.yaml` (cópia do `landing-page`, sem a rede `edge`); o Actions entra como
     `deploy@`. Cabe no Always Free junto com a VM do `landing-page` (limite de 4 OCPUs e 24 GB
     somando as duas).
+13. **Cadastro aberto em produção** (2026-11-11, etapa 7): qualquer pessoa pode se registrar e
+    receber e-mails. É um portfólio e o volume será baixo; o limite é o plano grátis do Resend
+    (100 e-mails por dia, 3.000 por mês).
 
 ## Decidir com o dev
 
-Perguntar antes da etapa que depende de cada uma. (Domínio, alias, migrações e imagens públicas já
-viraram as decisões 6, 7, 9 e 10.)
-
-1. **Cadastro aberto em produção.** Qualquer pessoa pode se registrar e receber e-mails (no plano
-   grátis do Resend: 100 por dia, 3.000 por mês). Recomendação: deixar aberto; é um portfólio e o
-   volume será baixo. Etapa 7.
+Nada em aberto: domínio, alias, migrações, imagens públicas e cadastro viraram as decisões 6, 7,
+9, 10 e 13.
 
 ## Regras de sempre
 
@@ -173,7 +172,8 @@ Ao fim de cada etapa, o dev faz commit.
 - [x] 3. Imagem `caddy` de produção — confirmada em 2026-11-10
 - [x] 4. `compose.prod.yaml` — confirmada em 2026-11-10
 - [x] 5. Laravel em produção — confirmada em 2026-11-10
-- [ ] 6. Workflow de deploy e VM própria — revisada em 2026-11-11 (decisão 12), aguardando
-  conferência
-- [ ] 7. Roteiro do servidor e primeiro deploy — `docs/deploy.md` escrito em 2026-11-11, aguardando
-  o dev executar
+- [x] 6. Workflow de deploy e VM própria — confirmada em 2026-11-11
+- [x] 7. Roteiro do servidor e primeiro deploy — confirmada em 2026-11-11 (app no ar em
+  https://ceudehoje.danielcarvalho.dev)
+
+Plano concluído em 2026-11-11.
