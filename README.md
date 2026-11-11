@@ -1,60 +1,79 @@
-# Placeholder
+# Céu de Hoje
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+[![CI](https://github.com/dancarvalhodev/ceu-de-hoje/actions/workflows/ci.yml/badge.svg)](https://github.com/dancarvalhodev/ceu-de-hoje/actions/workflows/ci.yml)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Diz se o céu está bom para observar agora, no seu local, e avisa por e-mail quando vale a pena
+olhar para cima. No ar em **https://ceudehoje.danielcarvalho.dev**.
 
-## About Laravel
+## O que faz
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Cadastro de locais:** cada usuário cadastra de onde observa (nome, latitude, longitude e fuso
+  horário), digitando ou com o botão "Usar minha localização".
+- **Tela "Céu agora":** uma pontuação de observabilidade de 0 a 10 para o local, com a cobertura
+  de nuvens do momento e a fase da lua.
+- **Alerta diário:** todo dia às 20h (horário de São Paulo), um e-mail para quem tem um local com
+  pontuação 7 ou mais.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Como a pontuação funciona
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+A pontuação começa em 10 e perde por dois motivos: as **nuvens** tiram na mesma proporção (céu
+fechado dá 0), e a **lua** tira até metade (nova não tira nada, cheia tira metade).
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+pontuação = 10 × (1 − nuvens / 100) × (1 − 0,5 × iluminação da lua)
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Arredondada a uma casa decimal.
 
-## Contributing
+| Céu | Lua | Pontuação |
+|---|---|---|
+| Limpo | Nova | 10 |
+| Limpo | Cheia | 5 |
+| Metade nublado | Nova | 5 |
+| Metade nublado | Cheia | 2,5 |
+| Fechado | Qualquer | 0 |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+As nuvens vêm da API do Open-Meteo; a iluminação da lua é calculada localmente.
 
-## Code of Conduct
+## Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Laravel 13** com **PHP 8.5**, telas em **Blade**
+- **MySQL** e **Redis** (sessão, cache e fila)
+- **Caddy**, **Docker Compose** e **just** para os comandos
+- **Pest**, **Pint** e **Larastan**
+- **GitHub Actions** para CI e deploy, **Oracle Cloud** para hospedar
+- **Resend** para os e-mails
+- **Open-Meteo** (cobertura de nuvens) e **solaris/php-moon-phase** (fase da lua)
 
-## Security Vulnerabilities
+## Rodar localmente
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Pré-requisitos: **Docker** (com o Compose v2) e **[just](https://github.com/casey/just)**. Não é
+preciso PHP, Composer nem Node no computador: tudo roda nos containers.
 
-## License
+```bash
+git clone https://github.com/dancarvalhodev/ceu-de-hoje.git
+cd ceu-de-hoje
+just install
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+O `just install` cria o `.env`, sobe os containers, instala as dependências, gera a chave, roda as
+migrações e compila os assets. Depois:
+
+- App: http://localhost
+- Mailpit (e-mails de desenvolvimento): http://localhost:8025
+
+`just` sem argumentos lista os outros comandos (`just test`, `just stan`, `just cs`, `just vite`...).
+
+## Deploy
+
+Cada push na `master` dispara o GitHub Actions: os testes rodam, as imagens de produção (PHP e
+Caddy, para ARM) são publicadas no GitHub Container Registry, e o workflow entra na VM da Oracle
+por SSH para baixar as imagens e subir a versão nova com Docker Compose. A migração roda na subida
+do container PHP, e o próprio Caddy do app cuida do HTTPS. O passo a passo para montar o servidor
+está em [`docs/deploy.md`](docs/deploy.md).
+
+## Próximos passos
+
+- React com Inertia, começando pela tela de cadastro de local.
+- Painel "Céu agora" em React.
+- Planetas visíveis à noite, com o melhor horário para cada um.
