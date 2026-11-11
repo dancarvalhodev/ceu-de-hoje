@@ -132,7 +132,8 @@ viraram as decisões 6, 7, 9 e 10.)
    modelo do `landing-page`: CI → imagens ARM no GHCR → `scp` do `compose.prod.yaml` → `pull`,
    migrações (decisão 9) e `up -d --no-build --wait` com `-p ceu-prod` → `prune`, tudo como
    `deploy@`. Ajustes da decisão 12: `caddy` com portas 80/443 e HTTPS pelo `SITE_ADDRESS`, sem
-   rede `edge`; sem `trusted_proxies`/`trustProxies` (e sem `TrustProxiesTest`);
+   rede `edge`; sem `trusted_proxies`/`trustProxies` (o `TrustProxiesTest` passa a garantir que
+   `X-Forwarded-*` forjados são ignorados);
    `infra/cloud-init.yaml`. Conferência: `docker compose -f compose.prod.yaml config -q`, leitura
    do YAML e `just up` (dev igual); o primeiro push de verdade fica para a etapa 7.
 7. **Roteiro do servidor e primeiro deploy.** `docs/deploy.md`, no formato do `infra/README.md`

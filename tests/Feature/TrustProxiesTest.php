@@ -1,15 +1,15 @@
 <?php
 
-test('links use https when the proxy says the request came over https', function () {
+// No proxy sits in front of the app, so X-Forwarded-* headers come from the client and are ignored
+test('a forged X-Forwarded-Proto does not change the links', function () {
     $response = $this->withHeader('X-Forwarded-Proto', 'https')->get('/login');
 
     $response->assertOk();
-    $response->assertSee('action="https://localhost/login"', false);
+    $response->assertSee('action="http://localhost/login"', false);
 });
 
-test('links stay http without the proxy header', function () {
-    $response = $this->get('/login');
+test('a forged X-Forwarded-For does not change the client ip', function () {
+    $this->withHeader('X-Forwarded-For', '203.0.113.7')->get('/login');
 
-    $response->assertOk();
-    $response->assertSee('action="http://localhost/login"', false);
+    expect(request()->ip())->toBe('127.0.0.1');
 });
